@@ -63,7 +63,7 @@
                 <i class="fa fa-refresh mr-2"></i>刷新
             </button>
             <button id="exportBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center">
-                <i class="fa fa-download mr-2"></i>导出题目
+                <i class="fa fa-download mr-2"></i>下载试卷
             </button>
         </div>
     </div>
@@ -321,16 +321,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const homeButton = document.getElementById('home');
-        homeButton.addEventListener('click', function() {
-            window.parent.postMessage({ type: 'urlChange', url: "exam.html" }, '*');
-        });
 
         // 处理批改按钮
         const correctionButtons = document.querySelectorAll('button[question-id]');
         correctionButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const questionId = this.getAttribute('question-id');
+                // const questionId = this.getAttribute('question-id');
                 // 显示处理中提示
                 showNotification('正在加载题目...', 'info');
                 // 模拟加载延迟
