@@ -2,11 +2,113 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>学生考试管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/dist/boxicons.js' rel='stylesheet'>
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>AdminHub</title>
 </head>
 <body>
-<div>
+<!-- SIDEBAR -->
+<section id="sidebar">
+    <a href="#" class="brand">
+        <i class='bx bxs-smile  bx-lg'></i>
+        <span class="text">exam</span>
+    </a>
+    <ul class="side-menu top">
+        <li class="active">
+            <a href="#">
+                <i class='bx bxs-dashboard bx-sm' ></i>
+                <span class="text">试卷批阅</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bxs-shopping-bag-alt bx-sm' ></i>
+                <span class="text">试卷分析</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bxs-doughnut-chart bx-sm' ></i>
+                <span class="text">学情分析</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="side-menu bottom">
+        <li>
+            <a href="#">
+                <i class='bx bxs-cog bx-sm bx-spin-hover' ></i>
+                <span class="text">Settings</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="logout">
+                <i class='bx bx-power-off bx-sm bx-burst-hover' ></i>
+                <span class="text">Logout</span>
+            </a>
+        </li>
+    </ul>
+</section>
+<!-- SIDEBAR -->
 
-</div>
+<!-- CONTENT -->
+<section id="content">
+    <!--    <iframe id="myIframe" src="exam.html" height="980px" width="100%"></iframe>-->
+    <!-- NAVBAR -->
+    <nav>
+        <i class='bx bx-menu bx-sm' ></i>
+        <a href="#" class="nav-link">类别</a>
+        <form action="#">
+            <div class="form-input">
+                <input type="search" placeholder="Search...">
+                <button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+            </div>
+        </form>
+<!--        <input type="checkbox" class="checkbox" id="switch-mode" hidden />-->
+<!--        <label class="swith-lm" for="switch-mode">-->
+<!--            <i class="bx bxs-moon"></i>-->
+<!--            <i class="bx bx-sun"></i>-->
+<!--            <div class="ball"></div>-->
+<!--        </label>-->
+
+        <!-- Notification Bell -->
+        <a href="#" class="notification" id="notificationIcon">
+            <i class='bx bxs-bell bx-tada-hover' ></i>
+            <span class="num">3</span>
+        </a>
+        <div class="notification-menu" id="notificationMenu">
+            <ul>
+                <li>您有要求重判的试卷</li>
+                <li>您有新的阅卷任务</li>
+                <li>第一次月考阅卷已结束</li>
+            </ul>
+        </div>
+
+        <!-- Profile Menu -->
+        <a href="#" class="profile" id="profileIcon">
+            <img src="https://placehold.co/600x400/png" alt="Profile">
+        </a>
+        <div class="profile-menu" id="profileMenu">
+            <ul>
+                <li><a href="#">个人主页</a></li>
+                <li><a href="#">设置</a></li>
+                <li><a href="#">推出登入</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- NAVBAR -->
+    <iframe src="exam.html" height="930px" width="100%" style="border: none"></iframe>
+</section>
+<!-- CONTENT -->
+
+
+
+<script src="js/script.js"></script>
 </body>
 </html>
