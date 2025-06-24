@@ -259,13 +259,13 @@
                 this.classList.remove('bg-primary');
                 this.classList.add('bg-success');
 
-                // 3秒后恢复原状
+                // 2秒后恢复原状
                 setTimeout(() => {
                     this.innerHTML = '<i class="fa fa-save mr-2"></i>保存当前评分';
                     this.classList.remove('bg-success');
                     this.classList.add('bg-primary');
                     this.disabled = false;
-                }, 3000);
+                }, 2000);
             }, 1000);
         });
 
@@ -286,5 +286,3 @@
         }
     });
 </script>
-</body>
-</html>

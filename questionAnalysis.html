@@ -1,0 +1,667 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- 配置Tailwind自定义颜色和字体 -->
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#165DFF',
+                    secondary: '#36CFC9',
+                    warning: '#FF7D00',
+                    success: '#00B42A',
+                    danger: '#F53F3F',
+                    neutral: {
+                        100: '#F2F3F5',
+                        200: '#E5E6EB',
+                        300: '#C9CDD4',
+                        400: '#86909C',
+                        500: '#4E5969',
+                        600: '#272E3B',
+                        700: '#1D2129',
+                    }
+                },
+                fontFamily: {
+                    inter: ['Inter', 'system-ui', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
+<!-- 自定义工具类 -->
+<style type="text/tailwindcss">
+    @layer utilities {
+        .content-auto {
+            content-visibility: auto;
+        }
+        .student-card {
+            @apply border border-neutral-200 rounded-lg p-3 hover:shadow-md transition-all cursor-pointer;
+        }
+        .student-card-selected {
+            @apply border-primary bg-primary/5;
+        }
+        .score-badge {
+            @apply inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+        }
+        .score-badge-excellent {
+            @apply bg-success/10 text-success;
+        }
+        .score-badge-good {
+            @apply bg-secondary/10 text-secondary;
+        }
+        .score-badge-average {
+            @apply bg-primary/10 text-primary;
+        }
+        .score-badge-fail {
+            @apply bg-danger/10 text-danger;
+        }
+        .tab-button {
+            @apply px-4 py-2 text-sm font-medium border-b-2 transition-all;
+        }
+        .tab-button-active {
+            @apply border-primary text-primary;
+        }
+        .tab-button-inactive {
+            @apply border-transparent text-neutral-500 hover:text-neutral-700;
+        }
+        .answer-option {
+            @apply flex items-center p-2 border rounded-lg mb-2 transition-all;
+        }
+        .answer-option-correct {
+            @apply border-success bg-success/5;
+        }
+        .answer-option-incorrect {
+            @apply border-danger bg-danger/5;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    }
+</style>
+
+<div class="max-w-7xl mx-auto">
+
+    <!-- 题目标题 -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h2 class="text-xl font-bold text-neutral-800">第15题：阅读理解</h2>
+                <p class="text-neutral-500 mt-1">本题满分：20分 | 平均得分：15.6分 | 得分率：78%</p>
+            </div>
+            <div class="flex space-x-2">
+                <button class="px-3 py-1.5 bg-neutral-100 text-neutral-600 rounded-lg hover:bg-neutral-200 transition-colors">
+                    <i class="fa fa-download mr-1"></i>导出分析
+                </button>
+                <button class="px-3 py-1.5 bg-neutral-100 text-neutral-600 rounded-lg hover:bg-neutral-200 transition-colors">
+                    <i class="fa fa-share-alt mr-1"></i>分享
+                </button>
+            </div>
+        </div>
+
+        <!-- 题目内容 -->
+        <div class="bg-neutral-50 rounded-lg p-4 mb-4">
+            <h3 class="font-medium text-neutral-700 mb-3">阅读下面的文章，回答问题：</h3>
+            <p class="text-neutral-600 mb-4">
+                人工智能是计算机科学的一个分支，它试图了解智能的实质，并生产出一种新的能以人类智能相似的方式做出反应的智能机器。该领域的研究包括机器人、语言识别、图像识别、自然语言处理和专家系统等。人工智能从诞生以来，理论和技术日益成熟，应用领域也不断扩大，可以设想，未来人工智能带来的科技产品，将会是人类智慧的"容器"。
+            </p>
+            <h3 class="font-medium text-neutral-700 mb-2">问题：</h3>
+            <p class="text-neutral-600">人工智能的研究领域包括哪些方面？请列举至少三个方面。</p>
+        </div>
+
+        <!-- 参考答案 -->
+        <div class="bg-neutral-50 rounded-lg p-4">
+            <h3 class="font-medium text-neutral-700 mb-2">参考答案：</h3>
+            <p class="text-neutral-600">
+                人工智能的研究领域包括：<br>
+                1. 机器人<br>
+                2. 语言识别<br>
+                3. 图像识别<br>
+                4. 自然语言处理<br>
+                5. 专家系统<br>
+                （列举任意三个即可得满分）
+            </p>
+        </div>
+    </div>
+
+    <!-- 分数段分布和学生列表 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 左侧：分数段分布 -->
+        <div class="lg:col-span-1 space-y-4">
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <h3 class="font-semibold text-lg mb-3">分数段分布</h3>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-neutral-600">优秀 (18-20分)</span>
+                            <span class="font-medium">8人 (18%)</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-success h-2 rounded-full" style="width: 18%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-neutral-600">良好 (15-17分)</span>
+                            <span class="font-medium">15人 (33%)</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-secondary h-2 rounded-full" style="width: 33%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-neutral-600">中等 (12-14分)</span>
+                            <span class="font-medium">12人 (27%)</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 27%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-neutral-600">较差 (0-11分)</span>
+                            <span class="font-medium">10人 (22%)</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-danger h-2 rounded-full" style="width: 22%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学生列表 -->
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-lg">学生回答情况</h3>
+                    <div class="relative">
+                        <select class="pl-3 pr-8 py-1.5 text-sm border border-neutral-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                            <option value="all">全部学生</option>
+                            <option value="excellent">优秀 (18-20分)</option>
+                            <option value="good">良好 (15-17分)</option>
+                            <option value="average">中等 (12-14分)</option>
+                            <option value="poor">较差 (0-11分)</option>
+                        </select>
+                        <i class="fa fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <div id="studentList" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                    <!-- 优秀学生 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：学生答题卡 -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-sm p-4 h-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-lg">学生答题卡</h3>
+                    <div class="flex items-center">
+                        <span class="mr-2 text-sm text-neutral-600">李小明</span>
+                        <span class="score-badge score-badge-excellent">20分</span>
+                    </div>
+                </div>
+
+                <!-- 答题卡内容 -->
+                <div id="answerSheet" class="space-y-4">
+                    <!-- 题目 -->
+                    <div class="bg-neutral-50 rounded-lg p-4">
+                        <h4 class="font-medium text-neutral-700 mb-2">题目：</h4>
+                        <p class="text-neutral-600">
+                            人工智能的研究领域包括哪些方面？请列举至少三个方面。
+                        </p>
+                    </div>
+
+                    <!-- 学生答案 -->
+                    <div class="bg-white border border-neutral-200 rounded-lg p-4">
+                        <h4 class="font-medium text-neutral-700 mb-2">学生答案：</h4>
+                        <p class="text-neutral-600 mb-4">
+                            人工智能的研究领域包括：<br>
+                            1. 自然语言处理<br>
+                            2. 计算机视觉（图像识别）<br>
+                            3. 机器学习<br>
+                            4. 专家系统<br>
+                            5. 机器人技术
+                        </p>
+
+                        <div class="flex justify-between items-center pt-3 border-t border-neutral-100">
+                            <div>
+                                <span class="text-sm text-neutral-500">批改结果：</span>
+                                <span class="text-success font-medium">正确</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm text-neutral-500">得分：</span>
+                                <span class="text-lg font-bold text-success">20/20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 教师评语 -->
+                    <div class="bg-neutral-50 rounded-lg p-4">
+                        <h4 class="font-medium text-neutral-700 mb-2">教师评语：</h4>
+                        <p class="text-neutral-600">
+                            回答完整且准确，对人工智能的研究领域有清晰的理解。特别是能将"计算机视觉"与"图像识别"进行关联，显示出对该领域的深入了解。
+                        </p>
+                    </div>
+
+                    <!-- 答题分析 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white border border-neutral-200 rounded-lg p-4">
+                            <h4 class="font-medium text-neutral-700 mb-2">关键词匹配：</h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+                                    <span>机器人</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+                                    <span>语言识别</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+                                    <span>图像识别</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+                                    <span>自然语言处理</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+                                    <span>专家系统</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 请求重判 -->
+                        <div class="bg-white border border-neutral-200 rounded-lg p-4">
+                            <h4 class="font-medium text-neutral-700 mb-2">请求重判：</h4>
+                            <div class="mb-4">
+                                <textarea id="rejudgeReason" class="w-full p-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all" rows="3" placeholder="请输入重判理由..."></textarea>
+                                <p class="text-xs text-neutral-500 mt-1">请详细说明你认为需要重判的理由，这将帮助教师更好地理解你的诉求。</p>
+                            </div>
+                            <div id="rejudgeStatus" class="mb-3 p-2 rounded-lg bg-neutral-50 border border-neutral-200">
+                                <div class="flex items-center">
+                                    <i class="fa fa-clock-o text-warning mr-2"></i>
+                                    <span class="text-sm text-neutral-600">重判开放中：截止日期 2025年6月30日</span>
+                                </div>
+                            </div>
+                            <button id="submitRejudge" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center">
+                                <i class="fa fa-paper-plane mr-2"></i>提交重判申请
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 学生数据
+        const students = [
+            { id: '20250101', name: '李小明', score: 20, scoreClass: 'excellent' },
+            { id: '20250102', name: '王芳', score: 19, scoreClass: 'excellent' },
+            { id: '20250103', name: '张伟', score: 18, scoreClass: 'excellent' },
+            { id: '20250104', name: '刘畅', score: 17, scoreClass: 'good' },
+            { id: '20250105', name: '陈静', score: 16, scoreClass: 'good' },
+            { id: '20250106', name: '赵强', score: 14, scoreClass: 'average' },
+            { id: '20250107', name: '吴敏', score: 10, scoreClass: 'fail' }
+        ];
+
+        // 生成学生列表
+        function renderStudentList() {
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = ''; // 清空现有内容
+
+            students.forEach((student, index) => {
+                const isSelected = index === 0; // 第一个学生默认选中
+                const initial = student.name.charAt(0); // 获取姓氏首字母
+
+                const card = document.createElement('div');
+                card.className = `student-card ${isSelected ? 'student-card-selected' : ''}`;
+                card.setAttribute('data-student-id', student.id);
+
+                card.innerHTML = `
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
+                        ${initial}
+                    </div>
+                    <div class="ml-2">
+                        <div class="font-medium text-neutral-700">${student.name}</div>
+                        <div class="text-xs text-neutral-500">${student.id}</div>
+                    </div>
+                </div>
+                <div class="score-badge score-badge-${student.scoreClass}">${student.score}分</div>
+            </div>
+        `;
+
+                studentList.appendChild(card);
+            });
+
+            // 重新绑定学生卡片点击事件
+            bindStudentCardEvents();
+        }
+
+        renderStudentList();
+        // 绑定学生卡片点击事件
+        function bindStudentCardEvents() {
+            const studentCards = document.querySelectorAll('.student-card');
+            studentCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 移除所有卡片的选中状态
+                    studentCards.forEach(c => c.classList.remove('student-card-selected'));
+
+                    // 添加当前卡片的选中状态
+                    this.classList.add('student-card-selected');
+
+                    // 获取学生ID
+                    const studentId = this.getAttribute('data-student-id');
+
+                    // 加载学生答题卡
+                    loadStudentAnswerSheet(studentId);
+                });
+            });
+        }
+
+        // loadStudentAnswerSheet("");
+
+        // 学生卡片点击事件
+        const studentCards = document.querySelectorAll('.student-card');
+        studentCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // 移除所有卡片的选中状态
+                studentCards.forEach(c => c.classList.remove('student-card-selected'));
+
+                // 添加当前卡片的选中状态
+                this.classList.add('student-card-selected');
+
+                // 获取学生ID
+                const studentId = this.getAttribute('data-student-id');
+
+                // 模拟加载学生答题卡
+                loadStudentAnswerSheet(studentId);
+            });
+        });
+
+        // 模拟加载学生答题卡
+        // function loadStudentAnswerSheet(studentId) {
+        //     const answerSheet = document.getElementById('answerSheet');
+        //
+        //     // 显示加载状态
+        //     answerSheet.innerHTML = `
+        //             <div class="flex justify-center items-center py-10">
+        //                 <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        //                 <span class="ml-3 text-neutral-600">加载学生答题卡中...</span>
+        //             </div>
+        //         `;
+        //
+        //     // 模拟加载延迟
+        //     setTimeout(() => {
+        //         answerSheet.innerHTML = `
+        //                     <!-- 题目 -->
+        //                     <div class="bg-neutral-50 rounded-lg p-4">
+        //                         <h4 class="font-medium text-neutral-700 mb-2">题目：</h4>
+        //                         <p class="text-neutral-600">
+        //                             人工智能的研究领域包括哪些方面？请列举至少三个方面。
+        //                         </p>
+        //                     </div>
+        //
+        //                     <!-- 学生答案 -->
+        //                     <div class="bg-white border border-neutral-200 rounded-lg p-4">
+        //                         <h4 class="font-medium text-neutral-700 mb-2">学生答案：</h4>
+        //                         <p class="text-neutral-600 mb-4">
+        //                             人工智能的研究领域包括：<br>
+        //                             1. 自然语言处理<br>
+        //                             2. 计算机视觉（图像识别）<br>
+        //                             3. 机器学习<br>
+        //                             4. 专家系统<br>
+        //                             5. 机器人技术
+        //                         </p>
+        //
+        //                         <div class="flex justify-between items-center pt-3 border-t border-neutral-100">
+        //                             <div>
+        //                                 <span class="text-sm text-neutral-500">批改结果：</span>
+        //                                 <span class="text-success font-medium">正确</span>
+        //                             </div>
+        //                             <div class="text-right">
+        //                                 <span class="text-sm text-neutral-500">得分：</span>
+        //                                 <span class="text-lg font-bold text-success">20/20</span>
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //
+        //                     <!-- 教师评语 -->
+        //                     <div class="bg-neutral-50 rounded-lg p-4">
+        //                         <h4 class="font-medium text-neutral-700 mb-2">教师评语：</h4>
+        //                         <p class="text-neutral-600">
+        //                             回答完整且准确，对人工智能的研究领域有清晰的理解。特别是能将"计算机视觉"与"图像识别"进行关联，显示出对该领域的深入了解。
+        //                         </p>
+        //                     </div>
+        //
+        //                     <!-- 答题分析 -->
+        //                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        //                         <div class="bg-white border border-neutral-200 rounded-lg p-4">
+        //                             <h4 class="font-medium text-neutral-700 mb-2">关键词匹配：</h4>
+        //                             <div class="space-y-2">
+        //                                 <div class="flex items-center">
+        //                                     <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+        //                                     <span>机器人</span>
+        //                                 </div>
+        //                                 <div class="flex items-center">
+        //                                     <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+        //                                     <span>语言识别</span>
+        //                                 </div>
+        //                                 <div class="flex items-center">
+        //                                     <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+        //                                     <span>图像识别</span>
+        //                                 </div>
+        //                                 <div class="flex items-center">
+        //                                     <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+        //                                     <span>自然语言处理</span>
+        //                                 </div>
+        //                                 <div class="flex items-center">
+        //                                     <div class="w-3 h-3 rounded-full bg-success mr-2"></div>
+        //                                     <span>专家系统</span>
+        //                                 </div>
+        //                             </div>
+        //                         </div>
+        //
+        //                         <!-- 请求重判 -->
+        //                         <div class="bg-white border border-neutral-200 rounded-lg p-4">
+        //                             <h4 class="font-medium text-neutral-700 mb-2">请求重判：</h4>
+        //                             <div class="mb-4">
+        //                                 <textarea id="rejudgeReason" class="w-full p-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all" rows="3" placeholder="请输入重判理由..."></textarea>
+        //                                 <p class="text-xs text-neutral-500 mt-1">请详细说明你认为需要重判的理由，这将帮助教师更好地理解你的诉求。</p>
+        //                             </div>
+        //                             <div id="rejudgeStatus" class="mb-3 p-2 rounded-lg bg-neutral-50 border border-neutral-200">
+        //                                 <div class="flex items-center">
+        //                                     <i class="fa fa-clock-o text-warning mr-2"></i>
+        //                                     <span class="text-sm text-neutral-600">重判开放中：截止日期 2025年6月30日</span>
+        //                                 </div>
+        //                             </div>
+        //                             <button id="submitRejudge" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center">
+        //                                 <i class="fa fa-paper-plane mr-2"></i>提交重判申请
+        //                             </button>
+        //                         </div>
+        //                     </div>
+        //                 `;
+        //     }, 500);
+        // }
+        // 重判状态数据
+        const rejudgeData = {
+            isOpen: true, // 重判是否开放
+            截止日期: '2025年6月30日',
+            hasApplied: false, // 是否已提交重判申请
+            reason: '', // 重判理由
+            status: 'pending' // 申请状态: pending, approved, rejected
+        };
+
+        const rejudgeReason = document.getElementById('rejudgeReason');
+        const submitRejudge = document.getElementById('submitRejudge');
+        const rejudgeStatus = document.getElementById('rejudgeStatus');
+
+        // 更新UI显示
+        function updateRejudgeUI() {
+            // 更新重判开放状态
+            if (rejudgeData.isOpen) {
+                rejudgeStatus.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fa fa-check-circle text-success mr-2"></i>
+                    <span class="text-sm text-neutral-600">重判开放中：截止日期 ${rejudgeData.截止日期}</span>
+                </div>
+            `;
+                rejudgeStatus.className = 'mb-3 p-2 rounded-lg bg-success/5 border border-success/20';
+            } else {
+                rejudgeStatus.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fa fa-times-circle text-danger mr-2"></i>
+                    <span class="text-sm text-neutral-600">重判已截止：截止日期 ${rejudgeData.截止日期}</span>
+                </div>
+            `;
+                rejudgeStatus.className = 'mb-3 p-2 rounded-lg bg-danger/5 border border-danger/20';
+            }
+
+            // 更新按钮状态
+            if (rejudgeData.hasApplied) {
+                // 已提交申请，显示撤销按钮
+                submitRejudge.innerHTML = '<i class="fa fa-undo mr-2"></i>撤销重判申请';
+                submitRejudge.className = 'w-full bg-warning text-white py-2 px-4 rounded-lg hover:bg-warning/90 transition-colors flex items-center justify-center';
+
+                // 禁用输入框
+                rejudgeReason.disabled = true;
+                rejudgeReason.classList.add('bg-neutral-50');
+
+                // 根据申请状态显示额外信息
+                let statusInfo = '';
+                if (rejudgeData.status === 'pending') {
+                    statusInfo = `
+                    <div class="mt-3 p-2 bg-neutral-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fa fa-clock-o text-warning mr-2"></i>
+                            <span class="text-sm text-neutral-600">您的重判申请正在处理中，教师将在3个工作日内完成审核</span>
+                        </div>
+                    </div>
+                `;
+                } else if (rejudgeData.status === 'approved') {
+                    statusInfo = `
+                    <div class="mt-3 p-2 bg-success/5 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fa fa-check-circle text-success mr-2"></i>
+                            <span class="text-sm text-neutral-600">您的重判申请已通过，分数已更新</span>
+                        </div>
+                    </div>
+                `;
+                } else if (rejudgeData.status === 'rejected') {
+                    statusInfo = `
+                    <div class="mt-3 p-2 bg-danger/5 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fa fa-times-circle text-danger mr-2"></i>
+                            <span class="text-sm text-neutral-600">您的重判申请已被驳回，理由：原评分无误</span>
+                        </div>
+                    </div>
+                `;
+                }
+
+                // 在状态区域下方添加申请状态信息
+                rejudgeStatus.insertAdjacentHTML('afterend', statusInfo);
+
+            } else {
+                // 未提交申请，显示提交按钮
+                submitRejudge.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>提交重判申请';
+                submitRejudge.className = 'w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center';
+
+                // 启用输入框
+                rejudgeReason.disabled = !rejudgeData.isOpen;
+                rejudgeReason.classList.toggle('bg-neutral-50', !rejudgeData.isOpen);
+            }
+
+            // 如果重判已截止且未提交申请，禁用提交按钮
+            if (!rejudgeData.isOpen && !rejudgeData.hasApplied) {
+                submitRejudge.disabled = true;
+                submitRejudge.className = 'w-full bg-neutral-300 text-neutral-500 py-2 px-4 rounded-lg cursor-not-allowed flex items-center justify-center';
+            } else {
+                submitRejudge.disabled = false;
+            }
+        }
+
+        // 提交重判申请
+        function submitRejudgeRequest() {
+            if (!rejudgeData.isOpen) {
+                alert('重判申请已截止，无法提交');
+                return;
+            }
+
+            if (!rejudgeReason.value.trim()) {
+                alert('请填写重判理由后再提交申请');
+                return;
+            }
+
+            // 保存理由
+            rejudgeData.reason = rejudgeReason.value;
+            rejudgeData.hasApplied = true;
+            rejudgeData.status = 'pending';
+
+            // 显示提交中的状态
+            submitRejudge.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>提交中...';
+            submitRejudge.disabled = true;
+
+            // 模拟提交请求
+            setTimeout(() => {
+                alert('重判申请已提交成功！教师将在3个工作日内处理你的申请。');
+                updateRejudgeUI();
+            }, 1500);
+        }
+
+        // 撤销重判申请
+        function cancelRejudgeRequest() {
+            if (!rejudgeData.hasApplied) {
+                return; // 没有申请可撤销
+            }
+
+            // 只有pending状态可以撤销
+            if (rejudgeData.status !== 'pending') {
+                alert('申请已处理，无法撤销');
+                return;
+            }
+
+            if (!confirm('确定要撤销重判申请吗？此操作不可恢复。')) {
+                return;
+            }
+
+            // 显示撤销中的状态
+            submitRejudge.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>撤销中...';
+            submitRejudge.disabled = true;
+
+            // 模拟撤销请求
+            setTimeout(() => {
+                rejudgeData.hasApplied = false;
+                rejudgeData.reason = '';
+
+                alert('重判申请已撤销！');
+                updateRejudgeUI();
+            }, 1000);
+        }
+
+        // 按钮点击事件
+        submitRejudge.addEventListener('click', function() {
+            if (rejudgeData.hasApplied) {
+                cancelRejudgeRequest();
+            } else {
+                submitRejudgeRequest();
+            }
+        });
+
+        // 初始化UI
+        updateRejudgeUI();
+    })
+</script>

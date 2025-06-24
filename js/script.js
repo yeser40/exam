@@ -134,6 +134,8 @@ window.addEventListener('message', function(e) {
             text = '学生列表';
         }else if (newSrc.includes('examList.html')) {
             text = '考试列表';
+        }else if (newSrc.includes('questionAnalysis.html')) {
+            text = '单题详情';
         }
         if(!ifFirst) {
             const navigationItems1 = document.createElement('li');

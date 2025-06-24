@@ -332,7 +332,7 @@
                 // 模拟加载延迟
                 setTimeout(() => {
                     window.parent.postMessage({ type: 'urlChange', url: "paperGrading.html" }, '*');
-                })
+                },300)
             })
         })
 
@@ -353,7 +353,7 @@
                         // 实际项目中这里应该跳转到错判处理页面
                         // alert(`已跳转到"${questionTitle.substring(0, 20)}..."的错判处理页面`);
                         window.parent.postMessage({ type: 'urlChange', url: "paperGrading.html" }, '*');
-                    }, 1500);
+                    }, 300);
                 }
             });
         });
