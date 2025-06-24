@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setTimeout(() => {
             document.body.removeChild(overlay);
-            window.parent.postMessage({ type: 'urlChange', url: "questionsList.html" }, '*');
+            window.parent.postMessage({ type: 'urlChange', url: "markingPaper/questionsList.html" }, '*');
         }, 500);
     }
 });

@@ -337,7 +337,7 @@
             document.querySelectorAll('.view-detail').forEach(button => {
                 button.addEventListener('click', function() {
                     // const studentId = this.getAttribute('student-id');
-                    window.parent.postMessage({ type: 'urlChange', url: "studentAnalysis.html" }, '*');
+                    window.parent.postMessage({ type: 'urlChange', url: "examAnalysis/studentAnalysis.html" }, '*');
                 });
             });
         }
@@ -430,7 +430,7 @@
         const detailButtons = document.querySelectorAll('button[question-id]');
         detailButtons.forEach(button => {
             button.addEventListener('click', function() {
-                window.parent.postMessage({ type: 'urlChange', url: "questionAnalysis.html" }, '*');
+                window.parent.postMessage({ type: 'urlChange', url: "examAnalysis/questionAnalysis.html" }, '*');
             });
         });
         const activeClass = 'px-4 py-2 font-medium text-primary border-b-2 border-primary';

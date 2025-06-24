@@ -13,11 +13,11 @@ allSideMenu.forEach(item => {
         breadcrumb.innerHTML = '';
         ifFirst = true;
         if (li.id === 'exam') {
-            window.postMessage({ type: 'urlChange', url: "exam.html" }, '*');
+            window.postMessage({ type: 'urlChange', url: "markingPaper/examList.html" }, '*');
         }else if (li.id === 'examSummary') {
-            window.postMessage({ type: 'urlChange', url: "examList.html" }, '*');
+            window.postMessage({ type: 'urlChange', url: "examAnalysis/examList.html" }, '*');
         } else if (li.id === 'studentSummary') {
-            window.postMessage({ type: 'urlChange', url: "studentList.html" }, '*');
+            window.postMessage({ type: 'urlChange', url: "learningAnalysis/studentList.html" }, '*');
         }
     })
 });
@@ -122,18 +122,16 @@ window.addEventListener('message', function(e) {
         let text = '';
         if (newSrc.includes('questionsList.html')) {
             text = '题目列表';
-        }else if (newSrc.includes('paperGrading.html')) {
+        }else if (newSrc.includes('markingPaper.html')) {
             text = '试卷批阅';
-        }else if (newSrc.includes('examSummary.html')) {
+        }else if (newSrc.includes('examAnalysis.html')) {
             text = '考试分析';
-        }else if (newSrc.includes('studentSummary.html')) {
+        }else if (newSrc.includes('learningAnalysis.html')) {
             text = '学情分析';
-        }else if (newSrc.includes('exam.html')) {
-            text = '考试管理';
+        }else if (newSrc.includes('examList.html')) {
+            text = '考试一览';
         }else if (newSrc.includes('studentList.html')) {
             text = '学生列表';
-        }else if (newSrc.includes('examList.html')) {
-            text = '考试列表';
         }else if (newSrc.includes('questionAnalysis.html')) {
             text = '单题详情';
         }else if (newSrc.includes('studentAnalysis.html')) {
@@ -175,6 +173,6 @@ window.addEventListener('message', function(e) {
         breadcrumb.appendChild(navigationItems2)
     }
 });
-window.postMessage({ type: 'urlChange', url: "exam.html" }, '*');
+window.postMessage({ type: 'urlChange', url: "markingPaper/examList.html" }, '*');
 
 
