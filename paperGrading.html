@@ -1,0 +1,305 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>试卷批阅 - 考试判卷系统</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- 配置Tailwind自定义颜色和字体 -->
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#165DFF',
+                    secondary: '#36CFC9',
+                    warning: '#FF7D00',
+                    success: '#00B42A',
+                    danger: '#F53F3F',
+                    neutral: {
+                        100: '#F2F3F5',
+                        200: '#E5E6EB',
+                        300: '#C9CDD4',
+                        400: '#86909C',
+                        500: '#4E5969',
+                        600: '#272E3B',
+                        700: '#1D2129',
+                    }
+                },
+                fontFamily: {
+                    inter: ['Inter', 'system-ui', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
+<!-- 自定义工具类 -->
+<style type="text/tailwindcss">
+    @layer utilities {
+        .content-auto {
+            content-visibility: auto;
+        }
+        .shadow-custom {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .transition-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .answer-area {
+            @apply bg-white border border-neutral-200 rounded-lg p-4 min-h-[200px] focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all;
+        }
+        .question-title {
+            @apply text-lg font-semibold text-neutral-700 mb-3;
+        }
+        .rubric-item {
+            @apply flex items-start mb-3;
+        }
+        .rubric-checkbox {
+            @apply w-5 h-5 mt-0.5 mr-3 text-primary focus:ring-primary rounded;
+        }
+        .rubric-text {
+            @apply text-neutral-700;
+        }
+        .score-input {
+            @apply w-16 px-3 py-2 border border-neutral-200 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all;
+        }
+    }
+</style>
+
+<!-- 面包屑导航 -->
+<div class="bg-white border-b border-neutral-200">
+    <div class="container mx-auto px-4 py-3">
+        <nav class="text-sm text-neutral-500" aria-label="breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li><a href="http://localhost:63342/exam/exam.html" class="hover:text-primary transition-colors">考试管理</a></li>
+                <li><i class="fa fa-angle-right"></i></li>
+                <li><a href="http://localhost:63342/exam/questionsList.html" class="hover:text-primary transition-colors">语文期中考试</a></li>
+                <li><i class="fa fa-angle-right"></i></li>
+                <li class="text-neutral-700 font-medium">试卷批阅</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- 主内容区 -->
+<main class="container mx-auto px-4 py-8">
+    <!-- 试卷信息头部 -->
+    <div class="bg-white rounded-xl shadow-custom p-6 mb-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+            <div>
+                <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-neutral-700">2025年语文期中考试</h1>
+                <p class="text-neutral-500">学生: 李小明 | 学号: 20250101 | 总分: <span class="text-primary font-bold">85</span>/100</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 试卷内容和评分区 -->
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- 试卷内容区 -->
+        <div class="w-full lg:w-2/3">
+            <!-- 题目内容 -->
+            <div class="bg-white rounded-xl shadow-custom p-6 mb-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">1</div>
+                        <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
+                    </div>
+                    <div class="text-sm text-neutral-500">
+                        <i class="fa fa-clock-o mr-1"></i>5分钟前判阅
+                    </div>
+                </div>
+
+                <h2 class="question-title">
+                    请简述《论语》中"学而时习之"的内涵及其现代意义。
+                    <span class="ml-2 text-sm font-normal text-neutral-500">(本题10分)</span>
+                </h2>
+
+                <div class="mb-6">
+                    <h3 class="font-medium text-neutral-700 mb-2">学生答案：</h3>
+                    <div class="answer-area whitespace-pre-wrap"
+                    >"学而时习之"出自《论语·学而》，原文为"学而时习之，不亦说乎"。这句话的核心内涵是：学习不仅是获取知识，更重要的是要时常复习、实践和应用所学的内容，通过反复练习将知识转化为自身的能力和素养。
+
+在现代社会，这句话仍然具有重要的指导意义：
+1. 强调终身学习：知识在不断更新，只有保持持续学习的态度，才能适应社会的快速变化。
+2. 注重实践应用：理论知识必须与实践相结合，通过反复练习和应用，才能真正掌握知识。
+3. 培养学习习惯：定期复习和总结所学内容，有助于加深记忆，提高学习效果。
+4. 体验学习乐趣：当通过不断实践而熟练掌握知识时，会获得成就感，从而激发学习的兴趣和动力。
+
+总之，"学而时习之"提醒我们，学习是一个持续的、不断实践的过程，只有将学习与应用相结合，才能真正从学习中受益。
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-medium text-neutral-700 mb-2">参考答案：</h3>
+                    <div class="bg-neutral-50 border border-neutral-200 rounded-lg p-4"
+                    >"学而时习之"是孔子教育思想的重要体现，其内涵主要包括：
+1. 学习与复习相结合："学"是获取新知识，"习"是巩固和应用知识，二者相辅相成。
+2. 知行合一：不仅要学习理论知识，更要将其应用到实际生活中，通过实践加深理解。
+3. 培养习惯：通过反复练习，将知识内化为个人的习惯和素养。
+4. 体验乐趣：当所学知识得以应用并取得成效时，会获得内心的满足和喜悦。
+
+其现代意义在于：
+1. 适应快速变化的社会：在知识爆炸的时代，只有不断学习和更新知识，才能跟上时代步伐。
+2. 强调实践能力：现代教育不仅关注知识的传授，更注重培养学生的实践能力和创新思维。
+3. 促进终身学习：学习是一个持续终身的过程，培养良好的学习习惯和态度至关重要。
+4. 提升个人竞争力：通过不断学习和实践，提高自身素质，增强在社会中的竞争力。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 导航按钮 -->
+            <div class="flex justify-between">
+                <button class="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                    <i class="fa fa-angle-left mr-2"></i>上一份
+                </button>
+                <button class="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                    下一份<i class="fa fa-angle-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 评分区 -->
+        <div class="w-full lg:w-1/3">
+            <div class="bg-white rounded-xl shadow-custom p-6 sticky top-24">
+                <h3 class="font-semibold text-lg text-neutral-700 mb-4">评分与评语</h3>
+
+                <!-- 得分输入 -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="font-medium text-neutral-700">得分</label>
+                        <span class="text-sm text-neutral-500">满分: 10分</span>
+                    </div>
+                    <input type="number" min="0" max="10" value="8" class="score-input text-lg font-bold">
+                </div>
+
+                <!-- 评分标准 -->
+                <div class="mb-6">
+                    <h4 class="font-medium text-neutral-700 mb-3">评分标准</h4>
+                    <div class="space-y-3">
+                        <div class="rubric-item">
+                            <input type="checkbox" id="criterion1" class="rubric-checkbox" checked>
+                            <label for="criterion1" class="rubric-text">准确解释"学而时习之"的基本含义（2分）</label>
+                        </div>
+                        <div class="rubric-item">
+                            <input type="checkbox" id="criterion2" class="rubric-checkbox" checked>
+                            <label for="criterion2" class="rubric-text">能结合现代社会阐述其意义（3分）</label>
+                        </div>
+                        <div class="rubric-item">
+                            <input type="checkbox" id="criterion3" class="rubric-checkbox" checked>
+                            <label for="criterion3" class="rubric-text">观点明确，逻辑清晰（2分）</label>
+                        </div>
+                        <div class="rubric-item">
+                            <input type="checkbox" id="criterion4" class="rubric-checkbox">
+                            <label for="criterion4" class="rubric-text">能举例说明或提供具体分析（2分）</label>
+                        </div>
+                        <div class="rubric-item">
+                            <input type="checkbox" id="criterion5" class="rubric-checkbox" checked>
+                            <label for="criterion5" class="rubric-text">语言表达流畅，无明显错别字（1分）</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 评语 -->
+                <div class="mb-6">
+                    <label class="font-medium text-neutral-700 mb-2 block">教师评语</label>
+                    <textarea rows="4" class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all" placeholder="请输入对学生答案的评语...">
+回答准确全面，能够抓住核心要点并结合现代社会进行分析。如果能加入一两个具体例子，会使论述更加丰富生动。
+                        </textarea>
+                </div>
+
+                <!-- 错判标记 -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 mr-2 text-primary focus:ring-primary rounded">
+                            <span class="text-neutral-700">标记为可能存在错判</span>
+                        </label>
+                        <button class="text-primary hover:text-primary/80 text-sm font-medium">
+                            <i class="fa fa-question-circle mr-1"></i>处理错判
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="flex flex-col space-y-3">
+                    <button class="px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center">
+                        <i class="fa fa-save mr-2"></i>保存当前评分
+                    </button>
+                    <button class="px-4 py-3 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center justify-center">
+                        <i class="fa fa-commenting-o mr-2"></i>添加批注到试卷
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- JavaScript -->
+<script>
+    // 初始化评分标准复选框状态
+    document.addEventListener('DOMContentLoaded', function() {
+        // 评分标准复选框交互
+        const checkboxes = document.querySelectorAll('.rubric-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateScore();
+            });
+        });
+
+        // 得分输入框交互
+        const scoreInput = document.querySelector('.score-input');
+        scoreInput.addEventListener('change', function() {
+            // 确保分数在0-10之间
+            if (this.value < 0) this.value = 0;
+            if (this.value > 10) this.value = 10;
+        });
+
+        // 模拟保存评分功能
+        const saveBtn = document.querySelector('button:has(.fa-save)');
+        saveBtn.addEventListener('click', function() {
+            // 添加加载动画
+            this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>保存中...';
+            this.disabled = true;
+
+            // 模拟保存延迟
+            setTimeout(() => {
+                this.innerHTML = '<i class="fa fa-check mr-2"></i>已保存';
+                this.classList.remove('bg-primary');
+                this.classList.add('bg-success');
+
+                // 3秒后恢复原状
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fa fa-save mr-2"></i>保存当前评分';
+                    this.classList.remove('bg-success');
+                    this.classList.add('bg-primary');
+                    this.disabled = false;
+                }, 3000);
+            }, 1000);
+        });
+
+        // 自动计算得分功能
+        function updateScore() {
+            const checkboxes = document.querySelectorAll('.rubric-checkbox');
+            let score = 0;
+
+            // 根据评分标准计算得分
+            if (checkboxes[0].checked) score += 2; // 标准1: 2分
+            if (checkboxes[1].checked) score += 3; // 标准2: 3分
+            if (checkboxes[2].checked) score += 2; // 标准3: 2分
+            if (checkboxes[3].checked) score += 2; // 标准4: 2分
+            if (checkboxes[4].checked) score += 1; // 标准5: 1分
+
+            // 更新得分输入框
+            document.querySelector('.score-input').value = score;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#165DFF',
+                    secondary: '#36CFC9',
+                    warning: '#FF7D00',
+                    success: '#00B42A',
+                    danger: '#F53F3F',
+                    neutral: {
+                        100: '#F2F3F5',
+                        200: '#E5E6EB',
+                        300: '#C9CDD4',
+                        400: '#86909C',
+                        500: '#4E5969',
+                        600: '#272E3B',
+                        700: '#1D2129',
+                    }
+                },
+                fontFamily: {
+                    inter: ['Inter', 'system-ui', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+
+<!-- 自定义工具类 -->
+<style type="text/tailwindcss">
+    @layer utilities {
+        .content-auto {
+            content-visibility: auto;
+        }
+        .table-shadow {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+        .transition-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .question-card {
+            @apply bg-white rounded-lg p-5 border border-neutral-200 hover:border-primary/30 hover:shadow-md transition-custom;
+        }
+        .filter-active {
+            @apply bg-primary text-white;
+        }
+    }
+</style>
+
+<!-- 面包屑导航 -->
+<div class="bg-white border-b border-neutral-200">
+    <div class="container mx-auto px-4 py-3">
+        <nav class="text-sm text-neutral-500" aria-label="breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li><a href="#" class="hover:text-primary transition-colors" id="home">考试管理</a></li>
+                <li><i class="fa fa-angle-right"></i></li>
+                <li><a href="#" class="hover:text-primary transition-colors">语文期中考试</a></li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- 主内容区 -->
+<main class="container mx-auto px-4 py-8">
+
+    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-neutral-700 mb-2">题目列表</h1>
+            <p class="text-neutral-500">共 <span class="font-medium text-neutral-700">36</span> 道题目</p>
+        </div>
+        <div class="flex space-x-3 mt-4 md:mt-0">
+            <button id="refreshBtn" class="px-4 py-2 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                <i class="fa fa-refresh mr-2"></i>刷新
+            </button>
+            <button id="exportBtn" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center">
+                <i class="fa fa-download mr-2"></i>导出题目
+            </button>
+        </div>
+    </div>
+    <!-- 题目列表 -->
+    <div class="space-y-4" id="questionsContainer">
+        <!-- 题目卡片1 - 已判阅 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">1</div>
+                    <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-clock-o mr-1"></i>5分钟前判阅
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                请简述《论语》中"学而时习之"的内涵及其现代意义。
+            </h3>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 简答题</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 中等</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                            question-id="1">
+                        <i class="fa fa-pencil mr-1"></i> 批改
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片2 - 已判阅 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">2</div>
+                    <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-clock-o mr-1"></i>15分钟前判阅
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                李白《静夜思》中"床前明月光"的"床"字在学术界有多种解释，请列举两种并简述理由。
+            </h3>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 简答题</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 较难</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                            question-id="2">
+                        <i class="fa fa-pencil mr-1"></i> 批改
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片3 - 未判阅 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center text-warning font-bold">3</div>
+                    <span class="text-sm font-medium text-warning"><i class="fa fa-clock-o mr-1"></i>待判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-user-o mr-1"></i> 120份答卷待批改
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                阅读下面的文言文段落，回答问题：<br>
+                <span class="text-neutral-600 text-sm bg-neutral-100 px-2 py-1 rounded inline-block mt-2">
+                        孟子曰："天时不如地利，地利不如人和。三里之城，七里之郭，环而攻之而不胜。夫环而攻之，必有得天时者矣；然而不胜者，是天时不如地利也。城非不高也，池非不深也，兵革非不坚利也，米粟非不多也；委而去之，是地利不如人和也。"
+                    </span>
+            </h3>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 阅读理解</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 难</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                            question-id="3">
+                        <i class="fa fa-pencil mr-1"></i> 批改
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片4 - 部分判阅 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center text-warning font-bold">4</div>
+                    <span class="text-sm font-medium text-warning"><i class="fa fa-hourglass-half mr-1"></i>部分判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-percent mr-1"></i> 已批改65%
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                请以"责任"为主题，写一篇不少于800字的议论文。要求观点明确，论据充分，结构合理，语言流畅。
+            </h3>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 作文</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 高</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                            question-id="4">
+                        <i class="fa fa-pencil mr-1"></i> 继续批改
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片5 - 填空题 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center text-warning font-bold">5</div>
+                    <span class="text-sm font-medium text-warning"><i class="fa fa-clock-o mr-1"></i>待判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-user-o mr-1"></i> 120份答卷待批改
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                补写出下列句子中的空缺部分。（每空1分，共6分）
+            </h3>
+
+            <div class="ml-4 mb-4 text-neutral-600 space-y-3">
+                <p>（1）____________________，似曾相识燕归来。（晏殊《浣溪沙》）</p>
+                <p>（2）大漠孤烟直，____________________。（王维《使至塞上》）</p>
+                <p>（3）____________________，直挂云帆济沧海。（李白《行路难》）</p>
+                <p>（4）春蚕到死丝方尽，____________________。（李商隐《无题》）</p>
+                <p>（5）____________________，西北望，射天狼。（苏轼《江城子·密州出猎》）</p>
+                <p>（6）不畏浮云遮望眼，____________________。（王安石《登飞来峰》）</p>
+            </div>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 填空题</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 中等</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                            question-id="5">
+                        <i class="fa fa-pencil mr-1"></i> 批改
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片6 - 填空题 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">6</div>
+                    <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-clock-o mr-1"></i>30分钟前判阅
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                古诗文默写。（每空1分，共8分）
+            </h3>
+
+            <div class="ml-4 mb-4 text-neutral-600 space-y-3">
+                <p>（1）____________________，直挂云帆济沧海。（李白《行路难》）</p>
+                <p>（2）大漠孤烟直，____________________。（王维《使至塞上》）</p>
+                <p>（3）____________________，一览众山小。（杜甫《望岳》）</p>
+                <p>（4）采菊东篱下，____________________。（陶渊明《饮酒》）</p>
+                <p>（5）____________________，病树前头万木春。（刘禹锡《酬乐天扬州初逢席上见赠》）</p>
+                <p>（6）但愿人长久，____________________。（苏轼《水调歌头》）</p>
+                <p>（7）____________________，化作春泥更护花。（龚自珍《己亥杂诗》）</p>
+                <p>（8）三人行，____________________。（《论语》）</p>
+            </div>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 填空题</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 中等</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                        question-id="6">
+                        <i class="fa fa-pencil mr-1"></i> 批改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分页控件 -->
+    <div class="mt-8 flex justify-between items-center">
+        <div class="text-sm text-neutral-500">
+            显示 1-6 条，共 36 条
+        </div>
+
+        <div class="flex items-center space-x-1">
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-400 hover:border-primary/30 hover:text-primary transition-colors">
+                <i class="fa fa-angle-left"></i>
+            </button>
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-white">1</button>
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 hover:border-primary/30 hover:text-primary transition-colors">2</button>
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 hover:border-primary/30 hover:text-primary transition-colors">3</button>
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 hover:border-primary/30 hover:text-primary transition-colors">4</button>
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 hover:border-primary/30 hover:text-primary transition-colors">5</button>
+            <button class="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:border-primary/30 hover:text-primary transition-colors">
+                <i class="fa fa-angle-right"></i>
+            </button>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const homeButton = document.getElementById('home');
+        homeButton.addEventListener('click', function() {
+            window.location.href = 'http://localhost:63342/exam/exam.html';
+        });
+
+        // 处理批改按钮
+        const correctionButtons = document.querySelectorAll('button[question-id]');
+        correctionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const questionId = this.getAttribute('question-id');
+                // 显示处理中提示
+                showNotification('正在加载题目...', 'info');
+                // 模拟加载延迟
+                setTimeout(() => {
+                    window.location.href = "http://localhost:63342/exam/paperGrading.html";
+                })
+            })
+        })
+
+        // 处理错判按钮
+        const errorCorrectionButtons = document.querySelectorAll('button:has(.fa-exclamation-triangle)');
+        errorCorrectionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const questionCard = this.closest('.question-card');
+                const questionTitle = questionCard.querySelector('h3').textContent;
+
+                // 显示处理错判确认对话框
+                if (confirm(`确定要处理"${questionTitle.substring(0, 20)}..."的错判申请吗？`)) {
+                    // 显示处理中提示
+                    showNotification('正在加载错判申请...', 'info');
+
+                    // 模拟加载延迟
+                    setTimeout(() => {
+                        // 实际项目中这里应该跳转到错判处理页面
+                        // alert(`已跳转到"${questionTitle.substring(0, 20)}..."的错判处理页面`);
+                        window.location.href = "http://localhost:63342/exam/paperGrading.html";
+                    }, 1500);
+                }
+            });
+        });
+
+        // 显示通知函数
+        function showNotification(message, type = 'info') {
+            // 创建通知元素
+            const notification = document.createElement('div');
+
+            // 根据类型设置样式
+            let bgColor, textColor, icon;
+            if (type === 'success') {
+                bgColor = 'bg-success';
+                textColor = 'text-white';
+                icon = 'fa-check-circle';
+            } else if (type === 'error') {
+                bgColor = 'bg-danger';
+                textColor = 'text-white';
+                icon = 'fa-times-circle';
+            } else {
+                bgColor = 'bg-primary';
+                textColor = 'text-white';
+                icon = 'fa-info-circle';
+            }
+
+            // 设置通知内容和样式
+            notification.className = `fixed top-4 right-4 ${bgColor} ${textColor} px-4 py-2 rounded-lg shadow-lg flex items-center z-50 transform transition-all duration-300 opacity-0 translate-y-[-20px]`;
+            notification.innerHTML = `
+                    <i class="fa ${icon} mr-2"></i>
+                    <span>${message}</span>
+                `;
+
+            // 添加到页面
+            document.body.appendChild(notification);
+
+            // 显示通知
+            setTimeout(() => {
+                notification.classList.remove('opacity-0', 'translate-y-[-20px]');
+            }, 10);
+
+            // 自动关闭
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'translate-y-[-20px]');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>

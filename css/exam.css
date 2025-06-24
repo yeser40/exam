@@ -1,17 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
+@layer utilities {
+    .content-auto {
+        content-visibility: auto;
+    }
+    .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+    .progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #F2F3F5;
+        overflow: hidden;
+    }
+    .progress-value {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 1s ease;
+    }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-a {
-    text-decoration: none;
-}
-
-li {
-    list-style: none;
+    .table-shadow {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+    .transition-custom {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .question-card {
+        @apply bg-white rounded-lg p-5 border border-neutral-200 hover:border-primary/30 hover:shadow-md transition-custom;
+    }
+    .filter-active {
+        @apply bg-primary text-white;
+    }
 }
 
 :root {
@@ -29,265 +53,4 @@ li {
     --light-yellow: #FFF2C6;
     --orange: #FD7238;
     --light-orange: #FFE0D3;
-}
-
-/* MAIN */
-main {
-    width: 100%;
-    padding: 36px 24px;
-    font-family: var(--poppins);
-    max-height: calc(100vh - 56px);
-    overflow-y: auto;
-}
-main .head-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    grid-gap: 16px;
-    flex-wrap: wrap;
-}
-main .head-title .left h1 {
-    font-size: 36px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: var(--dark);
-}
-main .head-title .left .breadcrumb {
-    display: flex;
-    align-items: center;
-    grid-gap: 16px;
-}
-main .head-title .left .breadcrumb li {
-    color: var(--dark);
-}
-main .head-title .left .breadcrumb li a {
-    color: var(--dark-grey);
-    pointer-events: none;
-}
-main .head-title .left .breadcrumb li a.active {
-    color: var(--blue);
-    pointer-events: unset;
-}
-main .head-title .btn-download {
-    height: 36px;
-    padding: 0 16px;
-    border-radius: 36px;
-    background: var(--blue);
-    color: var(--light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    grid-gap: 10px;
-    font-weight: 500;
-}
-
-
-
-
-main .box-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    grid-gap: 24px;
-    margin-top: 36px;
-}
-main .box-info li {
-    padding: 24px;
-    background: var(--light);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    grid-gap: 24px;
-}
-main .box-info li .bx {
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    font-size: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-main .box-info li:nth-child(1) .bx {
-    background: var(--light-blue);
-    color: var(--blue);
-}
-main .box-info li:nth-child(2) .bx {
-    background: var(--light-yellow);
-    color: var(--yellow);
-}
-main .box-info li:nth-child(3) .bx {
-    background: var(--light-orange);
-    color: var(--orange);
-}
-main .box-info li .text h3 {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--dark);
-}
-main .box-info li .text p {
-    color: var(--dark);
-}
-
-main .table-data {
-    display: flex;
-    flex-wrap: wrap;
-    grid-gap: 24px;
-    margin-top: 24px;
-    width: 100%;
-    color: var(--dark);
-}
-main .table-data > div {
-    border-radius: 20px;
-    background: var(--light);
-    padding: 24px;
-    overflow-x: auto;
-}
-main .table-data .head {
-    display: flex;
-    align-items: center;
-    grid-gap: 16px;
-    margin-bottom: 24px;
-}
-main .table-data .head h3 {
-    margin-right: auto;
-    font-size: 24px;
-    font-weight: 600;
-}
-main .table-data .head .bx {
-    cursor: pointer;
-}
-
-main .table-data .order {
-    flex-grow: 1;
-    flex-basis: 500px;
-}
-main .table-data .order table {
-    width: 100%;
-    border-collapse: collapse;
-}
-main .table-data .order table th {
-    padding-bottom: 12px;
-    font-size: 13px;
-    text-align: left;
-    border-bottom: 1px solid var(--grey);
-}
-main .table-data .order table td {
-    padding: 16px 0;
-}
-main .table-data .order table tr td:first-child {
-    display: flex;
-    align-items: center;
-    grid-gap: 12px;
-    padding-left: 6px;
-}
-main .table-data .order table td img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-main .table-data .order table tbody tr:hover {
-    background: var(--grey);
-}
-main .table-data .order table tr td .status {
-    font-size: 10px;
-    padding: 6px 16px;
-    color: var(--light);
-    border-radius: 20px;
-    font-weight: 700;
-}
-main .table-data .order table tr td .status.completed {
-    background: var(--blue);
-}
-main .table-data .order table tr td .status.process {
-    background: var(--yellow);
-}
-main .table-data .order table tr td .status.pending {
-    background: var(--orange);
-}
-
-
-main .table-data .todo {
-    flex-grow: 1;
-    flex-basis: 300px;
-}
-main .table-data .todo .todo-list {
-    width: 100%;
-}
-main .table-data .todo .todo-list li {
-    width: 100%;
-    margin-bottom: 16px;
-    background: var(--grey);
-    border-radius: 10px;
-    padding: 14px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-main .table-data .todo .todo-list li .bx {
-    cursor: pointer;
-}
-main .table-data .todo .todo-list li.completed {
-    border-left: 10px solid var(--blue);
-}
-main .table-data .todo .todo-list li.not-completed {
-    border-left: 10px solid var(--orange);
-}
-main .table-data .todo .todo-list li:last-child {
-    margin-bottom: 0;
-}
-/* MAIN */
-/* CONTENT */
-main .menu, nav .menu {
-
-    display: none;
-    list-style-type: none;
-    padding-left: 20px;
-    margin-top: 5px;
-    position: absolute;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 200px;
-}
-
-main .menu a , nav .menu a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 8px 16px;
-}
-
-main .menu a:hover , nav .menu a:hover {
-    background-color: #444;
-}
-
-main .menu-link , nav .menu-link {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    text-decoration: none;
-    color: #007bff;
-}
-
-main .menu-link:hover, nav .menu-link:hover {
-    text-decoration: underline;
-}
-
-
-@media screen and (max-width: 576px) {
-    main .box-info {
-        grid-template-columns: 1fr;
-    }
-
-    main .table-data .head {
-        min-width: 420px;
-    }
-    main .table-data .order table {
-        min-width: 420px;
-    }
-    main .table-data .todo .todo-list {
-        min-width: 420px;
-    }
 }

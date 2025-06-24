@@ -8,6 +8,13 @@ allSideMenu.forEach(item => {
             i.parentElement.classList.remove('active');
         })
         li.classList.add('active');
+        if (li.id === 'exam') {
+            changeIframeSrc('exam.html');
+        }else if (li.id === 'examSummary') {
+            changeIframeSrc('examSummary.html');
+        } else if (li.id === 'studentSummary') {
+            changeIframeSrc('studentSummary.html');
+        }
     })
 });
 
@@ -49,17 +56,6 @@ searchButton.addEventListener('click', function (e) {
         } else {
             searchButtonIcon.classList.replace('bx-x', 'bx-search');
         }
-    }
-})
-
-// Dark Mode Switch
-const switchMode = document.getElementById('switch-mode');
-
-switchMode.addEventListener('change', function () {
-    if (this.checked) {
-        document.body.classList.add('dark');
-    } else {
-        document.body.classList.remove('dark');
     }
 })
 
@@ -110,3 +106,7 @@ document.addEventListener("DOMContentLoaded", function() {
         menu.style.display = 'none';
     });
 });
+
+function changeIframeSrc(src) {
+    document.getElementById('myIframe').src = src;
+}
