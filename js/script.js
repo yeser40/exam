@@ -152,6 +152,17 @@ window.addEventListener('message', function(e) {
         currentUrl.addEventListener('click', function(event) {
             event.preventDefault();
             iframe.src = newSrc;
+            const breadcrumbItems = breadcrumb.children;
+            for (let i = breadcrumbItems.length - 1; i >= 0; i--) {
+                if (breadcrumbItems[i].children[0].tagName === 'I') {
+                    breadcrumb.removeChild(breadcrumbItems[i]);
+                }else if (breadcrumbItems[i].children[0].href.includes(newSrc)) {
+                    break;
+                }
+                else {
+                    breadcrumb.removeChild(breadcrumbItems[i]);
+                }
+            }
         });
         navigationItems2.appendChild(currentUrl);
         // navigationItems2.innerHTML = `
