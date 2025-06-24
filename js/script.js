@@ -1,5 +1,7 @@
 const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
 
+let ifFirst = true;
+
 allSideMenu.forEach(item => {
     const li = item.parentElement;
 
@@ -8,12 +10,14 @@ allSideMenu.forEach(item => {
             i.parentElement.classList.remove('active');
         })
         li.classList.add('active');
+        breadcrumb.innerHTML = '';
+        ifFirst = true;
         if (li.id === 'exam') {
-            changeIframeSrc('exam.html');
+            window.postMessage({ type: 'urlChange', url: "exam.html" }, '*');
         }else if (li.id === 'examSummary') {
-            changeIframeSrc('examSummary.html');
+            window.postMessage({ type: 'urlChange', url: "examList.html" }, '*');
         } else if (li.id === 'studentSummary') {
-            changeIframeSrc('studentSummary.html');
+            window.postMessage({ type: 'urlChange', url: "studentList.html" }, '*');
         }
     })
 });
@@ -43,21 +47,21 @@ window.addEventListener('load', adjustSidebar);
 window.addEventListener('resize', adjustSidebar);
 
 // Arama butonunu toggle etme
-const searchButton = document.querySelector('#content nav form .form-input button');
-const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
-const searchForm = document.querySelector('#content nav form');
-
-searchButton.addEventListener('click', function (e) {
-    if (window.innerWidth < 768) {
-        e.preventDefault();
-        searchForm.classList.toggle('show');
-        if (searchForm.classList.contains('show')) {
-            searchButtonIcon.classList.replace('bx-search', 'bx-x');
-        } else {
-            searchButtonIcon.classList.replace('bx-x', 'bx-search');
-        }
-    }
-})
+// const searchButton = document.querySelector('#content nav form .form-input button');
+// const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
+// const searchForm = document.querySelector('#content nav form');
+//
+// searchButton.addEventListener('click', function (e) {
+//     if (window.innerWidth < 768) {
+//         e.preventDefault();
+//         searchForm.classList.toggle('show');
+//         if (searchForm.classList.contains('show')) {
+//             searchButtonIcon.classList.replace('bx-search', 'bx-x');
+//         } else {
+//             searchButtonIcon.classList.replace('bx-x', 'bx-search');
+//         }
+//     }
+// })
 
 // Notification Menu Toggle
 document.querySelector('.notification').addEventListener('click', function () {
@@ -101,12 +105,61 @@ function toggleMenu(menuId) {
 
 // Başlangıçta tüm menüleri kapalı tut
 document.addEventListener("DOMContentLoaded", function() {
-    var allMenus = document.querySelectorAll('.menu');
+    const allMenus = document.querySelectorAll('.menu');
     allMenus.forEach(function(menu) {
         menu.style.display = 'none';
     });
 });
 
-function changeIframeSrc(src) {
-    document.getElementById('myIframe').src = src;
-}
+const iframe = document.getElementById('myIframe');
+let newSrc = iframe.src;
+const breadcrumb = document.getElementById('breadcrumb');
+
+window.addEventListener('message', function(e) {
+    if (e.data.type === 'urlChange') {
+        const newSrc = e.data.url;
+        iframe.src = newSrc;
+        let text = '';
+        if (newSrc.includes('questionsList.html')) {
+            text = '题目列表';
+        }else if (newSrc.includes('paperGrading.html')) {
+            text = '试卷批阅';
+        }else if (newSrc.includes('examSummary.html')) {
+            text = '考试分析';
+        }else if (newSrc.includes('studentSummary.html')) {
+            text = '学情分析';
+        }else if (newSrc.includes('exam.html')) {
+            text = '考试管理';
+        }else if (newSrc.includes('studentList.html')) {
+            text = '学生列表';
+        }else if (newSrc.includes('examList.html')) {
+            text = '考试列表';
+        }
+        if(!ifFirst) {
+            const navigationItems1 = document.createElement('li');
+            navigationItems1.innerHTML = `
+                    <i class="fa fa-angle-right"></i>
+                `;
+            breadcrumb.appendChild(navigationItems1)
+        }else {
+            ifFirst = false;
+        }
+        const navigationItems2 = document.createElement('li');
+        const currentUrl = document.createElement('a');
+        currentUrl.href = newSrc;
+        currentUrl.textContent = text;
+        currentUrl.classList.add('hover:text-primary', 'transition-colors');
+        currentUrl.addEventListener('click', function(event) {
+            event.preventDefault();
+            iframe.src = newSrc;
+        });
+        navigationItems2.appendChild(currentUrl);
+        // navigationItems2.innerHTML = `
+        //         <a href="${newSrc}" class="hover:text-primary transition-colors breadcrumb">${text}</a>
+        //     `;
+        breadcrumb.appendChild(navigationItems2)
+    }
+});
+window.postMessage({ type: 'urlChange', url: "exam.html" }, '*');
+
+

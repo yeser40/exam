@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setTimeout(() => {
             document.body.removeChild(overlay);
-            window.location.href = "../questionsList.html";
-        }, 2000);
+            window.parent.postMessage({ type: 'urlChange', url: "questionsList.html" }, '*');
+        }, 500);
     }
 });

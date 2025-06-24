@@ -12,6 +12,38 @@
     <!-- My CSS -->
     <link rel="stylesheet" href="css/style.css">
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFC9',
+                        warning: '#FF7D00',
+                        success: '#00B42A',
+                        danger: '#F53F3F',
+                        neutral: {
+                            100: '#F2F3F5',
+                            200: '#E5E6EB',
+                            300: '#C9CDD4',
+                            400: '#86909C',
+                            500: '#4E5969',
+                            600: '#272E3B',
+                            700: '#1D2129',
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
     <title>AdminHub</title>
 </head>
 <body>
@@ -60,15 +92,13 @@
 
 <!-- CONTENT -->
 <section id="content">
-    <!--    <iframe id="myIframe" src="exam.html" height="980px" width="100%"></iframe>-->
-    <!-- NAVBAR -->
     <nav>
         <i class='bx bx-menu bx-sm' ></i>
-<!--        <a href="#" class="nav-link">类别</a>-->
         <form action="#">
-            <div class="form-input">
-                <input type="search" placeholder="Search...">
-                <button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+            <div class="container mx-auto px-4 py-3">
+                <ol class="flex items-center space-x-2" id="breadcrumb">
+
+                </ol>
             </div>
         </form>
 
@@ -98,11 +128,9 @@
         </div>
     </nav>
     <!-- NAVBAR -->
-    <iframe src="exam.html" height="930px" width="100%" style="border: none" id = 'myIframe'></iframe>
+    <iframe src="" height="930px" width="100%" style="border: none" id = 'myIframe'></iframe>
 </section>
 <!-- CONTENT -->
-
-
 
 <script src="js/script.js"></script>
 </body>
