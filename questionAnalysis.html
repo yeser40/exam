@@ -509,6 +509,7 @@
         const rejudgeReason = document.getElementById('rejudgeReason');
         const submitRejudge = document.getElementById('submitRejudge');
         const rejudgeStatus = document.getElementById('rejudgeStatus');
+        const rejudgeHtml = rejudgeStatus.innerHTML;
 
         // 更新UI显示
         function updateRejudgeUI() {
@@ -573,8 +574,8 @@
                 }
 
                 // 在状态区域下方添加申请状态信息
-                rejudgeStatus.insertAdjacentHTML('afterend', statusInfo);
-
+                // rejudgeStatus.insertAdjacentHTML('afterend', statusInfo);
+                rejudgeStatus.innerHTML += statusInfo;
             } else {
                 // 未提交申请，显示提交按钮
                 submitRejudge.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>提交重判申请';
@@ -648,6 +649,7 @@
                 rejudgeData.reason = '';
 
                 alert('重判申请已撤销！');
+                rejudgeStatus.innerHTML = rejudgeHtml;
                 updateRejudgeUI();
             }, 1000);
         }

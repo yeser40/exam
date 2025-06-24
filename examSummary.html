@@ -326,7 +326,7 @@
                         <td class="px-4 py-3 text-sm">${student.reading}</td>
                         <td class="px-4 py-3 text-sm">${student.essay}</td>
                         <td class="px-4 py-3 text-sm">
-                            <button class="text-primary hover:text-primary/80 view-detail" data-id="${student.id}">查看详情</button>
+                            <button class="text-primary hover:text-primary/80 view-detail" student-id="${student.id}">查看详情</button>
                         </td>
                     `;
 
@@ -336,15 +336,15 @@
             // 添加详情查看事件
             document.querySelectorAll('.view-detail').forEach(button => {
                 button.addEventListener('click', function() {
-                    const studentId = this.getAttribute('data-id');
-                    alert(`查看学生 ${studentId} 的详细信息`);
-                    // 这里可以添加跳转到详情页的逻辑
+                    // const studentId = this.getAttribute('student-id');
+                    window.parent.postMessage({ type: 'urlChange', url: "studentAnalysis.html" }, '*');
                 });
             });
         }
 
         // 初始化表格
         renderTable(students);
+
         // 初始化图表
         const scoreDistributionCtx = document.getElementById('scoreDistribution').getContext('2d');
         const scoreDistributionChart = new Chart(scoreDistributionCtx, {

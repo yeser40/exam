@@ -1,0 +1,979 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+<!-- 配置Tailwind自定义颜色 -->
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#165DFF',
+                    secondary: '#36CFC9',
+                    warning: '#FF7D00',
+                    success: '#00B42A',
+                    danger: '#F53F3F',
+                    neutral: {
+                        100: '#F2F3F5',
+                        200: '#E5E6EB',
+                        300: '#C9CDD4',
+                        400: '#86909C',
+                        500: '#4E5969',
+                        600: '#272E3B',
+                        700: '#1D2129',
+                    }
+                },
+            }
+        }
+    }
+</script>
+
+<!-- 自定义工具类 -->
+<style type="text/tailwindcss">
+    @layer utilities {
+        .content-auto {
+            content-visibility: auto;
+        }
+        .question-card {
+            @apply border border-neutral-200 rounded-lg p-4 mb-4 hover:shadow-md transition-all;
+        }
+        .question-card-selected {
+            @apply border-primary bg-primary/5;
+        }
+        .score-badge {
+            @apply inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+        }
+        .score-badge-excellent {
+            @apply bg-success/10 text-success;
+        }
+        .score-badge-good {
+            @apply bg-secondary/10 text-secondary;
+        }
+        .score-badge-average {
+            @apply bg-primary/10 text-primary;
+        }
+        .score-badge-fail {
+            @apply bg-danger/10 text-danger;
+        }
+        .tab-button {
+            @apply px-4 py-2 text-sm font-medium border-b-2 transition-all;
+        }
+        .tab-button-active {
+            @apply border-primary text-primary;
+        }
+        .tab-button-inactive {
+            @apply border-transparent text-neutral-500 hover:text-neutral-700;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-hover {
+            @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+        }
+    }
+</style>
+<div class="max-w-7xl mx-auto">
+    <!-- 学生信息 -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium text-xl">
+                    李
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-xl font-bold text-neutral-800">李小明</h2>
+                    <p class="text-neutral-500">学号：20250101</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-neutral-500">总分</div>
+                <div class="text-2xl font-bold text-success">85/100</div>
+            </div>
+            <div class="flex space-x-2">
+                <button class="px-3 py-1.5 bg-neutral-100 text-neutral-600 rounded-lg hover:bg-neutral-200 transition-colors">
+                    <i class="fa fa-download mr-1"></i>导出分析
+                </button>
+                <button class="px-3 py-1.5 bg-neutral-100 text-neutral-600 rounded-lg hover:bg-neutral-200 transition-colors">
+                    <i class="fa fa-share-alt mr-1"></i>分享
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 标签页导航 -->
+    <div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+        <div class="flex border-b border-neutral-200">
+            <button id="tab-answer" class="tab-button tab-button-active">
+                <i class="fa fa-list-alt mr-2"></i>答题卡
+            </button>
+            <button id="tab-analysis" class="tab-button tab-button-inactive">
+                <i class="fa fa-bar-chart mr-2"></i>考试分析
+            </button>
+        </div>
+    </div>
+
+    <!-- 答题卡内容 -->
+    <div id="content-answer" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 左侧：题目列表 -->
+        <div class="lg:col-span-1 space-y-4">
+            <div class="bg-white rounded-xl shadow-sm p-4">
+                <h3 class="font-semibold text-lg mb-3">题目列表</h3>
+
+                <div id="questionList" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                    <!-- 题目1 -->
+                    <div class="question-card question-card-selected" data-question-id="1">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">
+                                    1
+                                </div>
+                                <div class="ml-2">
+                                    <div class="font-medium text-neutral-700">古诗词默写</div>
+                                    <div class="text-xs text-neutral-500">本题满分：5分</div>
+                                </div>
+                            </div>
+                            <div class="score-badge score-badge-excellent">5/5</div>
+                        </div>
+                    </div>
+
+                    <!-- 题目2 -->
+                    <div class="question-card" data-question-id="2">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">
+                                    2
+                                </div>
+                                <div class="ml-2">
+                                    <div class="font-medium text-neutral-700">文言文阅读</div>
+                                    <div class="text-xs text-neutral-500">本题满分：8分</div>
+                                </div>
+                            </div>
+                            <div class="score-badge score-badge-good">6/8</div>
+                        </div>
+                    </div>
+
+                    <!-- 题目3 -->
+                    <div class="question-card" data-question-id="3">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">
+                                    3
+                                </div>
+                                <div class="ml-2">
+                                    <div class="font-medium text-neutral-700">现代文阅读</div>
+                                    <div class="text-xs text-neutral-500">本题满分：10分</div>
+                                </div>
+                            </div>
+                            <div class="score-badge score-badge-good">8/10</div>
+                        </div>
+                    </div>
+
+                    <!-- 题目4 -->
+                    <div class="question-card" data-question-id="4">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">
+                                    4
+                                </div>
+                                <div class="ml-2">
+                                    <div class="font-medium text-neutral-700">语言表达运用</div>
+                                    <div class="text-xs text-neutral-500">本题满分：12分</div>
+                                </div>
+                            </div>
+                            <div class="score-badge score-badge-average">9/12</div>
+                        </div>
+                    </div>
+
+                    <!-- 题目5 -->
+                    <div class="question-card" data-question-id="5">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">
+                                    5
+                                </div>
+                                <div class="ml-2">
+                                    <div class="font-medium text-neutral-700">作文</div>
+                                    <div class="text-xs text-neutral-500">本题满分：50分</div>
+                                </div>
+                            </div>
+                            <div class="score-badge score-badge-fail">35/50</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：题目详情和答题情况 -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-sm p-4 h-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-semibold text-lg">题目详情</h3>
+                    <div class="flex items-center">
+                        <span class="mr-2 text-sm text-neutral-600">第1题</span>
+                        <span class="score-badge score-badge-excellent">5/5</span>
+                    </div>
+                </div>
+
+                <!-- 题目内容 -->
+                <div class="bg-neutral-50 rounded-lg p-4 mb-4">
+                    <h4 class="font-medium text-neutral-700 mb-2">题目：</h4>
+                    <p class="text-neutral-600 mb-3">补写出下列句子中的空缺部分。《劝学》中，“______________，______________”两句通过“木”与“金”的变化来进一步说明客观事物经过人工改造，可以改变原来的状况。</p>
+
+                    <div class="space-y-2">
+                        <div class="flex items-center p-2 border rounded-lg">
+                            <div class="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center mr-2">
+                                <span class="text-sm">正确答案</span>
+                            </div>
+                            <span>故木受绳则直，金就砺则利</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 学生答案 -->
+                <div class="bg-white border border-neutral-200 rounded-lg p-4 mb-4">
+                    <h4 class="font-medium text-neutral-700 mb-2">学生答案：</h4>
+
+                    <div class="flex items-center p-2 border border-success rounded-lg bg-success/5">
+                        <div class="w-6 h-6 rounded-full bg-success text-white flex items-center justify-center mr-2">
+                            <span class="text-sm">答案</span>
+                        </div>
+                        <span>故木受绳则直，金就砺则利</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-3 mt-3 border-t border-neutral-100">
+                        <div>
+                            <span class="text-sm text-neutral-500">批改结果：</span>
+                            <span class="text-success font-medium">正确</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm text-neutral-500">得分：</span>
+                            <span class="text-lg font-bold text-success">5/5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 请求重判 -->
+                <div id="rejudgeSection" class="bg-white border border-neutral-200 rounded-lg p-4">
+                    <h4 class="font-medium text-neutral-700 mb-2">请求重判：</h4>
+                    <div class="mb-4">
+                        <textarea id="rejudgeReason" class="w-full p-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all" rows="3" placeholder="请输入重判理由..."></textarea>
+                        <p class="text-xs text-neutral-500 mt-1">请详细说明你认为需要重判的理由，这将帮助教师更好地理解你的诉求。</p>
+                    </div>
+                    <div id="rejudgeStatus" class="mb-3 p-2 rounded-lg bg-neutral-50 border border-neutral-200">
+                        <div class="flex items-center">
+                            <i class="fa fa-clock-o text-warning mr-2"></i>
+                            <span class="text-sm text-neutral-600">重判开放中：截止日期 2025年6月30日</span>
+                        </div>
+                    </div>
+                    <button id="submitRejudge" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center">
+                        <i class="fa fa-paper-plane mr-2"></i>提交重判申请
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 考试分析内容 -->
+    <div id="content-analysis" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
+        <!-- 左侧：成绩概览 -->
+        <div class="lg:col-span-1 space-y-4">
+            <!-- 总分卡片 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <h3 class="font-semibold text-lg mb-3">成绩概览</h3>
+
+                <div class="flex flex-col items-center justify-center py-4">
+                    <div class="text-4xl font-bold text-success mb-2">85/100</div>
+                    <div class="text-sm text-neutral-500 mb-4">总分</div>
+
+                    <div class="w-32 h-32 relative mb-4">
+                        <canvas id="scoreChart"></canvas>
+                    </div>
+
+                    <div class="flex justify-center space-x-4 w-full mt-2">
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-primary">3</div>
+                            <div class="text-xs text-neutral-500">错题</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-success">7</div>
+                            <div class="text-xs text-neutral-500">对题</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-warning">85%</div>
+                            <div class="text-xs text-neutral-500">正确率</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 知识点掌握情况 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <h3 class="font-semibold text-lg mb-3">知识点掌握情况</h3>
+
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">古诗词</span>
+                            <span class="text-sm font-medium text-success">90%</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-success h-2 rounded-full" style="width: 90%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">文言文</span>
+                            <span class="text-sm font-medium text-primary">75%</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">现代文阅读</span>
+                            <span class="text-sm font-medium text-primary">70%</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 70%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">语言运用</span>
+                            <span class="text-sm font-medium text-success">95%</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-success h-2 rounded-full" style="width: 95%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">作文</span>
+                            <span class="text-sm font-medium text-danger">70%</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-danger h-2 rounded-full" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 考试表现对比 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <h3 class="font-semibold text-lg mb-3">班级对比</h3>
+
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">平均分</span>
+                            <span class="text-sm font-medium">72/100</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-neutral-400 h-2 rounded-full" style="width: 72%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">最高分</span>
+                            <span class="text-sm font-medium">92/100</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-neutral-400 h-2 rounded-full" style="width: 92%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium font-bold">你的分数</span>
+                            <span class="text-sm font-bold text-success">85/100</span>
+                        </div>
+                        <div class="w-full bg-neutral-100 rounded-full h-2">
+                            <div class="bg-success h-2 rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <span class="text-sm text-neutral-500">班级排名：</span>
+                    <span class="font-semibold text-primary">第5名</span>
+                    <span class="text-sm text-neutral-500">/45人</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：详细分析 -->
+        <div class="lg:col-span-2 space-y-4">
+            <!-- 题型得分分析 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <h3 class="font-semibold text-lg mb-3">题型得分分析</h3>
+
+                <div class="h-64">
+                    <canvas id="questionTypeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 错题分析 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <h3 class="font-semibold text-lg mb-3">错题分析</h3>
+
+                <div class="space-y-3">
+                    <div class="border border-danger/30 bg-danger/5 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">第2题：文言文阅读</h4>
+                            <span class="score-badge score-badge-average">4/8</span>
+                        </div>
+                        <p class="text-sm text-neutral-700 mb-2">
+                            阅读下面的文言文，完成后面题目。（文段省略）下列对文中加点词语的相关内容的解说，不正确的一项是：
+                        </p>
+                        <div class="text-sm">
+                            <p class="mb-1"><span class="text-danger">×</span> 你的答案：A</p>
+                            <p><span class="text-success">√</span> 正确答案：B</p>
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-2">
+                            <i class="fa fa-lightbulb-o mr-1"></i>
+                            解析：该项中对“科举”的表述有误，古代科举考试中，通过乡试的称为举人。
+                        </p>
+                    </div>
+
+                    <div class="border border-danger/30 bg-danger/5 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">第3题：现代文阅读</h4>
+                            <span class="score-badge score-badge-good">6/10</span>
+                        </div>
+                        <p class="text-sm text-neutral-700 mb-2">
+                            阅读下面的文字，完成后面题目。（文段省略）下列对文本相关内容和艺术特色的分析鉴赏，不正确的一项是：
+                        </p>
+                        <div class="text-sm">
+                            <p class="mb-1"><span class="text-danger">×</span> 你的答案：C</p>
+                            <p><span class="text-success">√</span> 正确答案：D</p>
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-2">
+                            <i class="fa fa-lightbulb-o mr-1"></i>
+                            解析：选项D中“直接抒发了作者的思乡之情”表述不准确，文中是通过景物描写间接表达的。
+                        </p>
+                    </div>
+
+                    <div class="border border-danger/30 bg-danger/5 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-medium">第5题：作文</h4>
+                            <span class="score-badge score-badge-fail">35/50</span>
+                        </div>
+                        <p class="text-sm text-neutral-700 mb-2">
+                            阅读下面的材料，根据要求写作。（材料省略）请结合材料，写一篇议论文。
+                        </p>
+                        <div class="text-sm">
+                            <p class="mb-1"><span class="text-danger">×</span> 你的答案：（作文内容省略）</p>
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-2">
+                            <i class="fa fa-lightbulb-o mr-1"></i>
+                            解析：文章论点不够鲜明，论证过程缺乏条理，事例不够典型，导致得分较低。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学习建议 -->
+            <div class="bg-white rounded-xl shadow-sm p-4 card-hover">
+                <h3 class="font-semibold text-lg mb-3">学习建议</h3>
+
+                <div class="space-y-3">
+                    <div class="flex items-start p-3 border border-warning/30 bg-warning/5 rounded-lg">
+                        <i class="fa fa-exclamation-circle text-warning mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-medium mb-1">加强文言文和现代文阅读训练</h4>
+                            <p class="text-sm text-neutral-700">
+                                文言文和现代文阅读部分错题较多，建议多做相关练习，积累文言实词、虚词和阅读技巧。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-3 border border-primary/30 bg-primary/5 rounded-lg">
+                        <i class="fa fa-book text-primary mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-medium mb-1">提升作文水平</h4>
+                            <p class="text-sm text-neutral-700">
+                                作文得分较低，建议多阅读优秀范文，学习写作技巧，注重论点的提炼和论证的逻辑性。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-3 border border-success/30 bg-success/5 rounded-lg">
+                        <i class="fa fa-thumbs-up text-success mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-medium mb-1">保持古诗词优势</h4>
+                            <p class="text-sm text-neutral-700">
+                                古诗词部分表现出色，继续保持！可以多积累一些课外古诗词，提升文学素养。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 标签页切换
+        const tabAnswer = document.getElementById('tab-answer');
+        const tabAnalysis = document.getElementById('tab-analysis');
+        const contentAnswer = document.getElementById('content-answer');
+        const contentAnalysis = document.getElementById('content-analysis');
+
+        tabAnswer.addEventListener('click', function() {
+            // 更新标签样式
+            tabAnswer.classList.remove('tab-button-inactive');
+            tabAnswer.classList.add('tab-button-active');
+            tabAnalysis.classList.remove('tab-button-active');
+            tabAnalysis.classList.add('tab-button-inactive');
+
+            // 显示答题卡内容
+            contentAnswer.classList.remove('hidden');
+            contentAnalysis.classList.add('hidden');
+        });
+
+        tabAnalysis.addEventListener('click', function() {
+            // 更新标签样式
+            tabAnalysis.classList.remove('tab-button-inactive');
+            tabAnalysis.classList.add('tab-button-active');
+            tabAnswer.classList.remove('tab-button-active');
+            tabAnswer.classList.add('tab-button-inactive');
+
+            // 显示考试分析内容
+            contentAnalysis.classList.remove('hidden');
+            contentAnswer.classList.add('hidden');
+
+            // 初始化图表
+            initCharts();
+        });
+
+        // 题目卡片点击事件
+        const questionCards = document.querySelectorAll('.question-card');
+        questionCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // 移除所有卡片的选中状态
+                questionCards.forEach(c => c.classList.remove('question-card-selected'));
+
+                // 添加当前卡片的选中状态
+                this.classList.add('question-card-selected');
+
+                // 获取题目ID
+                const questionId = this.getAttribute('data-question-id');
+
+                // 加载题目详情
+                loadQuestionDetails(questionId);
+            });
+        });
+
+        // 加载题目详情
+        function loadQuestionDetails(questionId) {
+            const questionDetails = document.getElementById('questionDetails');
+            const answerSheet = document.getElementById('answerSheet');
+
+            // 这里应该根据题目ID加载对应的题目详情和学生答案
+            // 为简化示例，这里只更新标题和分数
+            document.querySelector('.flex.justify-between.items-center.mb-4 h3').textContent = `题目详情`;
+            document.querySelector('.flex.justify-between.items-center.mb-4 .flex.items-center span:first-child').textContent = `第${questionId}题`;
+
+            // 更新题目内容和答案（示例）
+            const questionContent = document.querySelector('.bg-neutral-50.rounded-lg.p-4');
+            const studentAnswer = document.querySelector('.bg-white.border.border-neutral-200.rounded-lg.p-4.mb-4');
+
+            if (questionId === '1') {
+                // 题目1内容
+                questionContent.innerHTML = `
+                        <h4 class="font-medium text-neutral-700 mb-2">题目：</h4>
+                        <p class="text-neutral-600 mb-3">补写出下列句子中的空缺部分。《劝学》中，“______________，______________”两句通过“木”与“金”的变化来进一步说明客观事物经过人工改造，可以改变原来的状况。</p>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center p-2 border rounded-lg">
+                                <div class="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center mr-2">
+                                    <span class="text-sm">正确答案</span>
+                                </div>
+                                <span>故木受绳则直，金就砺则利</span>
+                            </div>
+                        </div>
+                    `;
+
+                // 学生答案
+                studentAnswer.innerHTML = `
+                        <h4 class="font-medium text-neutral-700 mb-2">学生答案：</h4>
+
+                        <div class="flex items-center p-2 border border-success rounded-lg bg-success/5">
+                            <div class="w-6 h-6 rounded-full bg-success text-white flex items-center justify-center mr-2">
+                                <span class="text-sm">答案</span>
+                            </div>
+                            <span>故木受绳则直，金就砺则利</span>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-3 mt-3 border-t border-neutral-100">
+                            <div>
+                                <span class="text-sm text-neutral-500">批改结果：</span>
+                                <span class="text-success font-medium">正确</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm text-neutral-500">得分：</span>
+                                <span class="text-lg font-bold text-success">5/5</span>
+                            </div>
+                        </div>
+                    `;
+            } else if (questionId === '5') {
+                // 题目5内容（作文）
+                questionContent.innerHTML = `
+                        <h4 class="font-medium text-neutral-700 mb-2">题目：</h4>
+                        <p class="text-neutral-600 mb-3">
+                            阅读下面的材料，根据要求写作。（材料省略）请结合材料，写一篇议论文。
+                        </p>
+                    `;
+
+                // 学生答案
+                studentAnswer.innerHTML = `
+                        <h4 class="font-medium text-neutral-700 mb-2">学生答案：</h4>
+
+                        <p class="text-neutral-600 mb-4">
+                            （作文内容省略）
+                        </p>
+
+                        <div class="flex justify-between items-center pt-3 mt-3 border-t border-neutral-100">
+                            <div>
+                                <span class="text-sm text-neutral-500">批改结果：</span>
+                                <span class="text-danger font-medium">部分正确</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm text-neutral-500">得分：</span>
+                                <span class="text-lg font-bold text-danger">35/50</span>
+                            </div>
+                        </div>
+                    `;
+            } else if (questionId === '2') {
+                // 题目2内容（文言文阅读）
+                questionContent.innerHTML = `
+                        <h4 class="font-medium text-neutral-700 mb-2">题目：</h4>
+                        <p class="text-neutral-600 mb-3">
+                            阅读下面的文言文，完成后面题目。（文段省略）下列对文中加点词语的相关内容的解说，不正确的一项是：
+                        </p>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center p-2 border rounded-lg">
+                                <div class="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center mr-2">
+                                    <span class="text-sm">A</span>
+                                </div>
+                                <span>选项A内容</span>
+                            </div>
+                            <div class="flex items-center p-2 border rounded-lg">
+                                <div class="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center mr-2">
+                                    <span class="text-sm">B</span>
+                                </div>
+                                <span>选项B内容</span>
+                            </div>
+                            <div class="flex items-center p-2 border rounded-lg">
+                                <div class="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center mr-2">
+                                    <span class="text-sm">C</span>
+                                </div>
+                                <span>选项C内容</span>
+                            </div>
+                            <div class="flex items-center p-2 border rounded-lg">
+                                <div class="w-6 h-6 rounded-full border border-neutral-300 flex items-center justify-center mr-2">
+                                    <span class="text-sm">D</span>
+                                </div>
+                                <span>选项D内容</span>
+                            </div>
+                        </div>
+                    `;
+
+                // 学生答案
+                studentAnswer.innerHTML = `
+                        <h4 class="font-medium text-neutral-700 mb-2">学生答案：</h4>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center p-2 border border-danger rounded-lg bg-danger/5">
+                                <div class="w-6 h-6 rounded-full bg-neutral-300 text-neutral-700 flex items-center justify-center mr-2">
+                                    <span class="text-sm">A</span>
+                                </div>
+                                <span>选项A内容</span>
+                            </div>
+                            <div class="flex items-center p-2 border border-success rounded-lg bg-success/5">
+                                <div class="w-6 h-6 rounded-full bg-success text-white flex items-center justify-center mr-2">
+                                    <span class="text-sm">B</span>
+                                </div>
+                                <span>选项B内容</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-3 mt-3 border-t border-neutral-100">
+                            <div>
+                                <span class="text-sm text-neutral-500">批改结果：</span>
+                                <span class="text-warning font-medium">部分正确</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm text-neutral-500">得分：</span>
+                                <span class="text-lg font-bold text-warning">4/8</span>
+                            </div>
+                        </div>
+                    `;
+            }
+        }
+
+        const rejudgeData = {
+            isOpen: true, // 重判是否开放
+            截止日期: '2025年6月30日',
+            hasApplied: false, // 是否已提交重判申请
+            reason: '', // 重判理由
+            status: 'pending' // 申请状态: pending, approved, rejected
+        };
+
+        const rejudgeReason = document.getElementById('rejudgeReason');
+        const submitRejudge = document.getElementById('submitRejudge');
+        const rejudgeStatus = document.getElementById('rejudgeStatus');
+        const rejudgeHtml = rejudgeStatus.innerHTML;
+
+        // 更新UI显示
+        function updateRejudgeUI() {
+            // 更新重判开放状态
+            if (rejudgeData.isOpen) {
+                rejudgeStatus.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fa fa-check-circle text-success mr-2"></i>
+                    <span class="text-sm text-neutral-600">重判开放中：截止日期 ${rejudgeData.截止日期}</span>
+                </div>
+            `;
+                rejudgeStatus.className = 'mb-3 p-2 rounded-lg bg-success/5 border border-success/20';
+            } else {
+                rejudgeStatus.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fa fa-times-circle text-danger mr-2"></i>
+                    <span class="text-sm text-neutral-600">重判已截止：截止日期 ${rejudgeData.截止日期}</span>
+                </div>
+            `;
+                rejudgeStatus.className = 'mb-3 p-2 rounded-lg bg-danger/5 border border-danger/20';
+            }
+
+            // 更新按钮状态
+            if (rejudgeData.hasApplied) {
+                // 已提交申请，显示撤销按钮
+                submitRejudge.innerHTML = '<i class="fa fa-undo mr-2"></i>撤销重判申请';
+                submitRejudge.className = 'w-full bg-warning text-white py-2 px-4 rounded-lg hover:bg-warning/90 transition-colors flex items-center justify-center';
+
+                // 禁用输入框
+                rejudgeReason.disabled = true;
+                rejudgeReason.classList.add('bg-neutral-50');
+
+                // 根据申请状态显示额外信息
+                let statusInfo = '';
+                if (rejudgeData.status === 'pending') {
+                    statusInfo = `
+                    <div class="mt-3 p-2 bg-neutral-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fa fa-clock-o text-warning mr-2"></i>
+                            <span class="text-sm text-neutral-600">您的重判申请正在处理中，教师将在3个工作日内完成审核</span>
+                        </div>
+                    </div>
+                `;
+                } else if (rejudgeData.status === 'approved') {
+                    statusInfo = `
+                    <div class="mt-3 p-2 bg-success/5 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fa fa-check-circle text-success mr-2"></i>
+                            <span class="text-sm text-neutral-600">您的重判申请已通过，分数已更新</span>
+                        </div>
+                    </div>
+                `;
+                } else if (rejudgeData.status === 'rejected') {
+                    statusInfo = `
+                    <div class="mt-3 p-2 bg-danger/5 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fa fa-times-circle text-danger mr-2"></i>
+                            <span class="text-sm text-neutral-600">您的重判申请已被驳回，理由：原评分无误</span>
+                        </div>
+                    </div>
+                `;
+                }
+
+                // 在状态区域下方添加申请状态信息
+                rejudgeStatus.innerHTML += statusInfo;
+            } else {
+                // 未提交申请，显示提交按钮
+                submitRejudge.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>提交重判申请';
+                submitRejudge.className = 'w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center';
+
+                // 启用输入框
+                rejudgeReason.disabled = !rejudgeData.isOpen;
+                rejudgeReason.classList.toggle('bg-neutral-50', !rejudgeData.isOpen);
+            }
+
+            // 如果重判已截止且未提交申请，禁用提交按钮
+            if (!rejudgeData.isOpen && !rejudgeData.hasApplied) {
+                submitRejudge.disabled = true;
+                submitRejudge.className = 'w-full bg-neutral-300 text-neutral-500 py-2 px-4 rounded-lg cursor-not-allowed flex items-center justify-center';
+            } else {
+                submitRejudge.disabled = false;
+            }
+        }
+
+        // 提交重判申请
+        function submitRejudgeRequest() {
+            if (!rejudgeData.isOpen) {
+                alert('重判申请已截止，无法提交');
+                return;
+            }
+
+            if (!rejudgeReason.value.trim()) {
+                alert('请填写重判理由后再提交申请');
+                return;
+            }
+
+            // 保存理由
+            rejudgeData.reason = rejudgeReason.value;
+            rejudgeData.hasApplied = true;
+            rejudgeData.status = 'pending';
+
+            // 显示提交中的状态
+            submitRejudge.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>提交中...';
+            submitRejudge.disabled = true;
+
+            // 模拟提交请求
+            setTimeout(() => {
+                alert('重判申请已提交成功！教师将在3个工作日内处理你的申请。');
+                updateRejudgeUI();
+            }, 1500);
+        }
+
+        // 撤销重判申请
+        function cancelRejudgeRequest() {
+            if (!rejudgeData.hasApplied) {
+                return; // 没有申请可撤销
+            }
+
+            // 只有pending状态可以撤销
+            if (rejudgeData.status !== 'pending') {
+                alert('申请已处理，无法撤销');
+                return;
+            }
+
+            if (!confirm('确定要撤销重判申请吗？此操作不可恢复。')) {
+                return;
+            }
+
+            // 显示撤销中的状态
+            submitRejudge.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>撤销中...';
+            submitRejudge.disabled = true;
+
+            // 模拟撤销请求
+            setTimeout(() => {
+                rejudgeData.hasApplied = false;
+                rejudgeData.reason = '';
+
+                alert('重判申请已撤销！');
+                rejudgeStatus.innerHTML = rejudgeHtml;
+                updateRejudgeUI();
+            }, 1000);
+        }
+
+        // 按钮点击事件
+        submitRejudge.addEventListener('click', function() {
+            if (rejudgeData.hasApplied) {
+                cancelRejudgeRequest();
+            } else {
+                submitRejudgeRequest();
+            }
+        });
+
+        // 初始化UI
+        updateRejudgeUI();
+
+        // 初始化图表
+        function initCharts() {
+            // 总分环形图
+            const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+            new Chart(scoreCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [85, 15],
+                        backgroundColor: [
+                            '#00B42A',  // success
+                            '#F2F3F5'   // neutral-100
+                        ],
+                        borderWidth: 0,
+                        cutout: '75%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    }
+                }
+            });
+
+            // 题型得分分析图
+            const questionTypeCtx = document.getElementById('questionTypeChart').getContext('2d');
+            new Chart(questionTypeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['古诗词默写', '文言文阅读', '现代文阅读', '语言表达运用', '作文'],
+                    datasets: [{
+                        label: '得分率',
+                        data: [100, 75, 80, 90, 70],
+                        backgroundColor: [
+                            '#165DFF',  // primary
+                            '#36CFC9',  // secondary
+                            '#00B42A',  // success
+                            '#FF7D00',  // warning
+                            '#F53F3F',  // danger
+                            '#272E3B',  // neutral-600
+                            '#86909C'   // neutral-400
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+        }
+
+        // 初始化重判状态
+        updateRejudgeStatus();
+
+        // 默认加载第一题
+        loadQuestionDetails('1');
+    });
+</script>
