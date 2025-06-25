@@ -136,6 +136,10 @@ window.addEventListener('message', function(e) {
             text = '单题详情';
         }else if (newSrc.includes('studentAnalysis.html')) {
             text = '学生详情';
+        }else if (newSrc.includes('studentList.html')) {
+            text = '学生列表';
+        }else if (newSrc.includes('learningAnalysis.html')) {
+            text = '学情分析';
         }
         if(!ifFirst) {
             const navigationItems1 = document.createElement('li');

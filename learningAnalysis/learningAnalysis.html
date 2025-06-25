@@ -1,10 +1,644 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学生学情分析 - 李小明</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#165DFF',
+          secondary: '#36CFC9',
+          success: '#00B42A',
+          warning: '#FF7D00',
+          danger: '#F53F3F',
+          neutral: {
+            100: '#F2F3F5',
+            200: '#E5E6EB',
+            300: '#C9CDD4',
+            400: '#86909C',
+            500: '#4E5969',
+            600: '#272E3B',
+            700: '#1D2129',
+          }
+        },
+        fontFamily: {
+          inter: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style type="text/tailwindcss">
+  @layer utilities {
+    .content-auto {
+      content-visibility: auto;
+    }
+    .card-hover {
+      @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    }
+    .chart-container {
+      @apply h-64 md:h-80;
+    }
+    .progress-bar {
+      @apply h-2 bg-neutral-200 rounded-full overflow-hidden;
+    }
+    .progress-value {
+      @apply h-full rounded-full transition-all duration-700 ease-out;
+    }
+    .badge {
+      @apply px-2 py-1 text-xs font-medium rounded-full;
+    }
+    .trend-up {
+      @apply text-success;
+    }
+    .trend-down {
+      @apply text-danger;
+    }
+  }
+</style>
 
-</body>
-</html>
+<div class="container mx-auto px-4 py-8">
+  <!-- 学生信息头部 -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center">
+      <div class="flex items-center mb-4 md:mb-0">
+        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl mr-4">
+          李
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-neutral-800">李小明</h1>
+          <p class="text-neutral-500">学号: 20250101 | 班级: 高一(1)班</p>
+        </div>
+      </div>
+      <div class="ml-auto flex space-x-3">
+        <button class="btn-outline flex items-center">
+          <i class="fa fa-print mr-2"></i> 打印报告
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 成绩概览 -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-medium text-neutral-700">综合排名</h3>
+        <span class="badge bg-primary/10 text-primary">班级</span>
+      </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <span class="text-4xl font-bold text-neutral-800">12</span>
+          <span class="ml-2 text-sm font-medium trend-up">
+                            <i class="fa fa-arrow-up mr-1"></i> 上升 3 名
+                        </span>
+        </div>
+        <div class="text-right">
+          <p class="text-sm text-neutral-500">总分</p>
+          <p class="text-xl font-bold text-neutral-800">736 / 900</p>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="flex justify-between text-sm mb-1">
+          <span>班级平均</span>
+          <span>682</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-value bg-primary" style="width: 82%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-medium text-neutral-700">年级排名</h3>
+        <span class="badge bg-secondary/10 text-secondary">年级</span>
+      </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <span class="text-4xl font-bold text-neutral-800">58</span>
+          <span class="ml-2 text-sm font-medium trend-up">
+                            <i class="fa fa-arrow-up mr-1"></i> 上升 12 名
+                        </span>
+        </div>
+        <div class="text-right">
+          <p class="text-sm text-neutral-500">百分位</p>
+          <p class="text-xl font-bold text-neutral-800">前 15%</p>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="flex justify-between text-sm mb-1">
+          <span>年级平均</span>
+          <span>645</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-value bg-secondary" style="width: 82%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-medium text-neutral-700">成绩趋势</h3>
+        <span class="badge bg-success/10 text-success">近3次</span>
+      </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <span class="text-4xl font-bold text-neutral-800">↑</span>
+          <span class="ml-2 text-sm font-medium trend-up">
+                            稳步提升
+                        </span>
+        </div>
+        <div class="text-right">
+          <p class="text-sm text-neutral-500">平均分差</p>
+          <p class="text-xl font-bold text-success">+18.5</p>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="flex justify-between text-sm mb-1">
+          <span>进步幅度</span>
+          <span>班级第 3</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-value bg-success" style="width: 75%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 成绩趋势图表 -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-neutral-800">成绩趋势分析</h2>
+      <div class="mt-3 md:mt-0 flex space-x-3">
+        <button class="btn-outline">本学期</button>
+        <button class="btn-outline">本学年</button>
+        <button class="btn-primary">全部</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="scoreTrendChart"></canvas>
+    </div>
+  </div>
+
+  <!-- 科目分析 -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <h2 class="text-xl font-bold text-neutral-800 mb-6">科目详细分析</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-neutral-200">
+        <thead class="bg-neutral-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            科目
+          </th>
+          <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            本次成绩
+          </th>
+          <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            班级平均
+          </th>
+          <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            年级平均
+          </th>
+          <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            排名
+          </th>
+          <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            趋势
+          </th>
+          <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-neutral-500 uppercase tracking-wider">
+            状态
+          </th>
+        </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-neutral-200">
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                <i class="fa fa-book"></i>
+              </div>
+              <span class="font-medium text-neutral-900">语文</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="text-lg font-bold">88</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            82
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            79
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            5
+            <span class="ml-1 text-xs trend-up">↑2</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="trend-up">
+                                    <i class="fa fa-arrow-up"></i> 4
+                                </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="badge bg-success/10 text-success">优秀</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 mr-3">
+                <i class="fa fa-calculator"></i>
+              </div>
+              <span class="font-medium text-neutral-900">数学</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="text-lg font-bold">76</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            79
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            75
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            18
+            <span class="ml-1 text-xs trend-down">↓3</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="trend-down">
+                                    <i class="fa fa-arrow-down"></i> 2
+                                </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="badge bg-warning/10 text-warning">中等</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
+                <i class="fa fa-language"></i>
+              </div>
+              <span class="font-medium text-neutral-900">英语</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="text-lg font-bold">92</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            85
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            81
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            3
+            <span class="ml-1 text-xs trend-up">↑1</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="trend-up">
+                                    <i class="fa fa-arrow-up"></i> 5
+                                </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="badge bg-success/10 text-success">优秀</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
+                <i class="fa fa-flask"></i>
+              </div>
+              <span class="font-medium text-neutral-900">物理</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="text-lg font-bold">79</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            74
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            71
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            10
+            <span class="ml-1 text-xs trend-up">↑4</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="trend-up">
+                                    <i class="fa fa-arrow-up"></i> 6
+                                </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="badge bg-primary/10 text-primary">良好</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-3">
+                <i class="fa fa-flask"></i>
+              </div>
+              <span class="font-medium text-neutral-900">化学</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="text-lg font-bold">85</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            80
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            77
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            7
+            <span class="ml-1 text-xs trend-up">↑2</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="trend-up">
+                                    <i class="fa fa-arrow-up"></i> 3
+                                </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="badge bg-primary/10 text-primary">良好</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 mr-3">
+                <i class="fa fa-globe"></i>
+              </div>
+              <span class="font-medium text-neutral-900">生物</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="text-lg font-bold">76</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            78
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            75
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            15
+            <span class="ml-1 text-xs trend-down">↓1</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="trend-down">
+                                    <i class="fa fa-arrow-down"></i> 1
+                                </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <span class="badge bg-warning/10 text-warning">中等</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 学习建议 -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <h2 class="text-xl font-bold text-neutral-800 mb-6">学习建议</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-neutral-50 rounded-lg p-5">
+        <div class="flex items-start">
+          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4 mt-1">
+            <i class="fa fa-lightbulb-o"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-neutral-800 mb-2">优势学科保持</h3>
+            <p class="text-neutral-600 mb-4">
+              你的语文和英语成绩优秀，保持当前的学习方法和节奏。建议你可以尝试参加一些学科竞赛或阅读更高难度的材料，进一步提升自己的水平。
+            </p>
+            <div class="flex space-x-2">
+              <span class="badge bg-primary/10 text-primary">语文</span>
+              <span class="badge bg-primary/10 text-primary">英语</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-neutral-50 rounded-lg p-5">
+        <div class="flex items-start">
+          <div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning font-bold mr-4 mt-1">
+            <i class="fa fa-exclamation-triangle"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-neutral-800 mb-2">薄弱学科提升</h3>
+            <p class="text-neutral-600 mb-4">
+              数学和生物成绩需要提高。建议每天安排专门的时间复习这两门学科，多做练习题，特别是错题整理。可以考虑找老师或同学进行针对性辅导。
+            </p>
+            <div class="flex space-x-2">
+              <span class="badge bg-warning/10 text-warning">数学</span>
+              <span class="badge bg-warning/10 text-warning">生物</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-neutral-50 rounded-lg p-5">
+        <div class="flex items-start">
+          <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success font-bold mr-4 mt-1">
+            <i class="fa fa-line-chart"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-neutral-800 mb-2">学习方法优化</h3>
+            <p class="text-neutral-600 mb-4">
+              你最近的学习状态良好，成绩稳步提升。建议继续保持良好的学习习惯，增加模拟考试的频率，提高应试能力。同时，注意合理安排时间，避免过度疲劳。
+            </p>
+            <div class="flex space-x-2">
+              <span class="badge bg-success/10 text-success">时间管理</span>
+              <span class="badge bg-success/10 text-success">错题整理</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-neutral-50 rounded-lg p-5">
+        <div class="flex items-start">
+          <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold mr-4 mt-1">
+            <i class="fa fa-calendar"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-neutral-800 mb-2">个性化学习计划</h3>
+            <p class="text-neutral-600 mb-4">
+              根据你的成绩分析，我们为你制定了个性化的学习计划。建议每天晚上安排1小时复习数学，周末安排2小时复习生物。每周进行一次自我测试，检查学习效果。
+            </p>
+            <button class="text-primary hover:text-primary/80 transition-colors mt-2 text-sm font-medium">
+              查看详细计划 <i class="fa fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 最近考试 -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-neutral-800">最近考试</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="border border-neutral-200 rounded-lg p-5 hover:border-primary transition-colors cursor-pointer">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="font-bold text-neutral-800">期中考试</h3>
+            <p class="text-sm text-neutral-500">2025年6月15日</p>
+          </div>
+          <span class="badge bg-primary/10 text-primary">已完成</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-sm text-neutral-500">总分</p>
+            <p class="text-xl font-bold text-neutral-800">736 / 900</p>
+          </div>
+          <div>
+            <p class="text-sm text-neutral-500">排名</p>
+            <p class="text-xl font-bold text-neutral-800">12 / 45</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border border-neutral-200 rounded-lg p-5 hover:border-primary transition-colors cursor-pointer">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="font-bold text-neutral-800">月考3</h3>
+            <p class="text-sm text-neutral-500">2025年5月20日</p>
+          </div>
+          <span class="badge bg-primary/10 text-primary">已完成</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-sm text-neutral-500">总分</p>
+            <p class="text-xl font-bold text-neutral-800">718 / 900</p>
+          </div>
+          <div>
+            <p class="text-sm text-neutral-500">排名</p>
+            <p class="text-xl font-bold text-neutral-800">15 / 45</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border border-neutral-200 rounded-lg p-5 hover:border-primary transition-colors cursor-pointer">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="font-bold text-neutral-800">月考2</h3>
+            <p class="text-sm text-neutral-500">2025年4月18日</p>
+          </div>
+          <span class="badge bg-primary/10 text-primary">已完成</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-sm text-neutral-500">总分</p>
+            <p class="text-xl font-bold text-neutral-800">692 / 900</p>
+          </div>
+          <div>
+            <p class="text-sm text-neutral-500">排名</p>
+            <p class="text-xl font-bold text-neutral-800">18 / 45</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 页面加载完成后初始化
+  document.addEventListener('DOMContentLoaded', function() {
+    // 初始化成绩趋势图表
+    const ctx = document.getElementById('scoreTrendChart').getContext('2d');
+
+    // 模拟成绩数据
+    const exams = ['月考1', '月考2', '月考3', '期中考试'];
+    const scores = [675, 692, 718, 736];
+    const classAvg = [650, 660, 670, 682];
+    const rank = [25, 18, 15, 12];
+
+    // 创建图表
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: exams,
+        datasets: [
+          {
+            label: '个人总分',
+            data: scores,
+            borderColor: '#165DFF',
+            backgroundColor: 'rgba(22, 93, 255, 0.1)',
+            tension: 0.3,
+            fill: true
+          },
+          {
+            label: '班级平均分',
+            data: classAvg,
+            borderColor: '#86909C',
+            backgroundColor: 'rgba(134, 144, 156, 0.1)',
+            tension: 0.3,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            min: 600,
+            max: 900,
+            title: {
+              display: true,
+              text: '分数'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: '考试'
+            }
+          }
+        },
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        },
+        animations: {
+          tension: {
+            duration: 1000,
+            easing: 'linear'
+          }
+        }
+      }
+    });
+
+    // 为每个进度条添加动画效果
+    document.querySelectorAll('.progress-value').forEach(bar => {
+      const width = bar.style.width;
+      bar.style.width = '0%';
+      setTimeout(() => {
+        bar.style.width = width;
+      }, 300);
+    });
+  });
+</script>

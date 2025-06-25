@@ -1,10 +1,380 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#165DFF',
+                    secondary: '#36CFC9',
+                    success: '#00B42A',
+                    warning: '#FF7D00',
+                    danger: '#F53F3F',
+                    neutral: {
+                        100: '#F2F3F5',
+                        200: '#E5E6EB',
+                        300: '#C9CDD4',
+                        400: '#86909C',
+                        500: '#4E5969',
+                        600: '#272E3B',
+                        700: '#1D2129',
+                    }
+                },
+                fontFamily: {
+                    inter: ['Inter', 'system-ui', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+<style type="text/tailwindcss">
+    @layer utilities {
+        .content-auto {
+            content-visibility: auto;
+        }
+        .search-input {
+            @apply w-full px-4 py-2 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all;
+        }
+        .filter-select {
+            @apply px-3 py-2 rounded-lg border border-neutral-300 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none bg-white;
+        }
+        .btn-primary {
+            @apply px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors;
+        }
+        .btn-outline {
+            @apply px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors;
+        }
+        .table-row-hover {
+            @apply hover:bg-neutral-50 transition-colors;
+        }
+        .sortable-header {
+            @apply cursor-pointer hover:bg-neutral-50 transition-colors;
+        }
+    }
+</style>
+<div class="container mx-auto px-4 py-8">
+    <!-- 搜索和过滤 -->
+    <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-neutral-700 mb-1">搜索学生</label>
+                <div class="relative">
+                    <input type="text" placeholder="输入姓名、学号或班级" id="searchInput" class="search-input pl-10">
+                    <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-neutral-700 mb-1">班级</label>
+                <select id="classFilter" class="filter-select w-full">
+                    <option value="">所有班级</option>
+                    <option value="高一(1)班">高一(1)班</option>
+                    <option value="高一(2)班">高一(2)班</option>
+                    <option value="高一(3)班">高一(3)班</option>
+                    <option value="高一(4)班">高一(4)班</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-neutral-700 mb-1">排序方式</label>
+                <select id="sortSelect" class="filter-select w-full">
+                    <option value="name-asc">姓名 (A-Z)</option>
+                    <option value="name-desc">姓名 (Z-A)</option>
+                    <option value="id-asc">学号 (小到大)</option>
+                    <option value="id-desc">学号 (大到小)</option>
+                    <option value="class-asc">班级 (A-Z)</option>
+                    <option value="class-desc">班级 (Z-A)</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-</body>
-</html>
+    <!-- 学生列表统计 -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+        <div class="text-sm text-neutral-500 mb-2 md:mb-0">
+            显示 <span id="showingCount" class="font-medium text-neutral-700">1-10</span> 条，共 <span id="totalCount" class="font-medium text-neutral-700">45</span> 名学生
+        </div>
+    </div>
+
+    <!-- 学生表格 -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-neutral-200">
+                <thead class="bg-neutral-50">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider sortable-header" data-sort="name">
+                        姓名
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider sortable-header" data-sort="id">
+                        学号
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider sortable-header" data-sort="class">
+                        班级
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                        操作
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="studentTableBody" class="bg-white divide-y divide-neutral-200">
+                <!-- 学生数据将通过JavaScript动态填充 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 无数据状态 -->
+        <div id="noDataState" class="hidden p-8 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-neutral-100 mb-4">
+                <i class="fa fa-search text-neutral-400 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-neutral-700 mb-2">未找到学生</h3>
+            <p class="text-neutral-500">请尝试调整搜索条件或筛选选项</p>
+        </div>
+    </div>
+
+    <!-- 分页 -->
+    <div class="mt-8 flex justify-between items-center">
+        <div class="text-sm text-neutral-500">
+            显示第 <span id="currentPage" class="font-medium text-neutral-700">1</span> 页，共 <span id="totalPages" class="font-medium text-neutral-700">5</span> 页
+        </div>
+        <div class="flex space-x-1">
+            <button id="prevPage" class="w-10 h-10 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-500 hover:border-primary hover:text-primary transition-colors" disabled>
+                <i class="fa fa-chevron-left text-xs"></i>
+            </button>
+            <button class="w-10 h-10 flex items-center justify-center rounded-md bg-primary text-white border border-primary">1</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-500 hover:border-primary hover:text-primary transition-colors">2</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-500 hover:border-primary hover:text-primary transition-colors">3</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-500 hover:border-primary hover:text-primary transition-colors">4</button>
+            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-500 hover:border-primary hover:text-primary transition-colors">5</button>
+            <button id="nextPage" class="w-10 h-10 flex items-center justify-center rounded-md border border-neutral-200 text-neutral-500 hover:border-primary hover:text-primary transition-colors">
+                <i class="fa fa-chevron-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 示例学生数据
+    const students = [
+        { id: '20250101', name: '李小明', class: '高一(1)班', score: 85 },
+        { id: '20250102', name: '王芳', class: '高一(1)班', score: 76 },
+        { id: '20250103', name: '张伟', class: '高一(2)班', score: 89 },
+        { id: '20250104', name: '刘畅', class: '高一(2)班', score: 78 },
+        { id: '20250105', name: '陈静', class: '高一(3)班', score: 65 },
+        { id: '20250106', name: '赵强', class: '高一(3)班', score: 68 },
+        { id: '20250107', name: '吴敏', class: '高一(4)班', score: 52 },
+        { id: '20250108', name: '郑宇', class: '高一(4)班', score: 91 },
+        { id: '20250109', name: '林芳', class: '高一(1)班', score: 79 },
+        { id: '20250110', name: '何伟', class: '高一(2)班', score: 67 },
+        { id: '20250111', name: '孙洋', class: '高一(3)班', score: 72 },
+        { id: '20250112', name: '周杰', class: '高一(4)班', score: 81 },
+        { id: '20250113', name: '徐娜', class: '高一(1)班', score: 83 },
+        { id: '20250114', name: '马超', class: '高一(2)班', score: 74 },
+        { id: '20250115', name: '朱琳', class: '高一(3)班', score: 69 },
+        { id: '20250116', name: '胡佳', class: '高一(4)班', score: 77 },
+        { id: '20250117', name: '郭亮', class: '高一(1)班', score: 80 },
+        { id: '20250118', name: '黄婷', class: '高一(2)班', score: 73 },
+        { id: '20250119', name: '董伟', class: '高一(3)班', score: 64 },
+        { id: '20250120', name: '钱芳', class: '高一(4)班', score: 82 },
+        { id: '20250121', name: '冯刚', class: '高一(1)班', score: 71 },
+        { id: '20250122', name: '程琳', class: '高一(2)班', score: 84 },
+        { id: '20250123', name: '曹明', class: '高一(3)班', score: 70 },
+        { id: '20250124', name: '袁芳', class: '高一(4)班', score: 75 },
+        { id: '20250125', name: '侯军', class: '高一(1)班', score: 86 },
+        { id: '20250126', name: '崔丽', class: '高一(2)班', score: 78 },
+        { id: '20250127', name: '谭明', class: '高一(3)班', score: 87 },
+        { id: '20250128', name: '廖亮', class: '高一(4)班', score: 79 },
+        { id: '20250129', name: '范佳', class: '高一(1)班', score: 88 },
+        { id: '20250130', name: '汪婷', class: '高一(2)班', score: 90 },
+        { id: '20250131', name: '石伟', class: '高一(3)班', score: 89 },
+        { id: '20250132', name: '贾芳', class: '高一(4)班', score: 83 },
+        { id: '20250133', name: '韦娜', class: '高一(1)班', score: 76 },
+        { id: '20250134', name: '夏明', class: '高一(2)班', score: 77 },
+        { id: '20250135', name: '邱亮', class: '高一(3)班', score: 74 },
+        { id: '20250136', name: '方芳', class: '高一(4)班', score: 72 },
+        { id: '20250137', name: '侯明', class: '高一(1)班', score: 73 },
+        { id: '20250138', name: '邹亮', class: '高一(2)班', score: 75 },
+        { id: '20250139', name: '熊芳', class: '高一(3)班', score: 78 },
+        { id: '20250140', name: '金伟', class: '高一(4)班', score: 79 },
+        { id: '20250141', name: '陆佳', class: '高一(1)班', score: 81 },
+        { id: '20250142', name: '郝亮', class: '高一(2)班', score: 82 },
+        { id: '20250143', name: '孔婷', class: '高一(3)班', score: 84 },
+        { id: '20250144', name: '白伟', class: '高一(4)班', score: 85 },
+        { id: '20250145', name: '康芳', class: '高一(1)班', score: 87 },
+    ];
+
+    // 渲染学生表格
+    function renderStudentTable(filteredStudents) {
+        const tableBody = document.getElementById('studentTableBody');
+        const noDataState = document.getElementById('noDataState');
+
+        // 清空表格
+        tableBody.innerHTML = '';
+
+        // 检查是否有数据
+        if (filteredStudents.length === 0) {
+            tableBody.parentElement.classList.add('hidden');
+            noDataState.classList.remove('hidden');
+            document.getElementById('showingCount').textContent = '0';
+            return;
+        }
+
+        // 显示表格，隐藏无数据状态
+        tableBody.parentElement.classList.remove('hidden');
+        noDataState.classList.add('hidden');
+
+        // 更新显示数量
+        const showingStart = 1;
+        const showingEnd = Math.min(10, filteredStudents.length);
+        document.getElementById('showingCount').textContent = `${showingStart}-${showingEnd}`;
+
+        // 渲染表格行
+        filteredStudents.slice(0, 10).forEach(student => {
+            const row = document.createElement('tr');
+            row.className = 'table-row-hover';
+
+            // 获取成绩等级
+            let scoreClass = '';
+            if (student.score >= 90) scoreClass = 'bg-success/10 text-success';
+            else if (student.score >= 80) scoreClass = 'bg-primary/10 text-primary';
+            else if (student.score >= 60) scoreClass = 'bg-warning/10 text-warning';
+            else scoreClass = 'bg-danger/10 text-danger';
+
+            row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-3">
+                                ${student.name.charAt(0)}
+                            </div>
+                            <div>
+                                <div class="font-medium text-neutral-900">${student.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                        ${student.id}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                        ${student.class}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="viewStudent('${student.id}', '${student.name}')" class="text-primary hover:text-primary/80 transition-colors">
+                            查看学情分析
+                        </button>
+                    </td>
+                `;
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    // 查看学生详情
+    function viewStudent(studentId, studentName) {
+        // 在实际应用中，这里会跳转到具体的学生学情分析页面
+        // alert(`正在查看 ${studentName} (${studentId}) 的学情分析`);
+        window.parent.postMessage({ type: 'urlChange', url: "learningAnalysis/learningAnalysis.html" }, '*');
+    }
+
+    // 过滤和排序学生数据
+    function filterAndSortStudents() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const classFilter = document.getElementById('classFilter').value;
+        const sortOption = document.getElementById('sortSelect').value;
+
+        // 过滤学生
+        let filteredStudents = students.filter(student => {
+            const matchesSearch =
+                student.name.toLowerCase().includes(searchTerm) ||
+                student.id.toLowerCase().includes(searchTerm) ||
+                student.class.toLowerCase().includes(searchTerm);
+
+            const matchesClass = classFilter === '' || student.class === classFilter;
+
+            return matchesSearch && matchesClass;
+        });
+
+        // 排序学生
+        switch (sortOption) {
+            case 'name-asc':
+                filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'name-desc':
+                filteredStudents.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+            case 'id-asc':
+                filteredStudents.sort((a, b) => a.id.localeCompare(b.id));
+                break;
+            case 'id-desc':
+                filteredStudents.sort((a, b) => b.id.localeCompare(a.id));
+                break;
+            case 'class-asc':
+                filteredStudents.sort((a, b) => a.class.localeCompare(b.class));
+                break;
+            case 'class-desc':
+                filteredStudents.sort((a, b) => b.class.localeCompare(a.class));
+                break;
+        }
+
+        // 更新总数显示
+        document.getElementById('totalCount').textContent = filteredStudents.length;
+
+        // 渲染表格
+        renderStudentTable(filteredStudents);
+    }
+
+    // 初始化事件监听器
+    function initEventListeners() {
+        // 搜索输入框变化时过滤
+        document.getElementById('searchInput').addEventListener('input', filterAndSortStudents);
+
+        // 班级筛选变化时过滤
+        document.getElementById('classFilter').addEventListener('change', filterAndSortStudents);
+
+        // 排序选择变化时排序
+        document.getElementById('sortSelect').addEventListener('change', filterAndSortStudents);
+
+        // 表头排序
+        document.querySelectorAll('.sortable-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const sortBy = header.getAttribute('data-sort');
+                const currentSort = document.getElementById('sortSelect').value;
+
+                // 根据当前排序状态切换排序方向
+                let newSort;
+                if (sortBy === 'name') {
+                    newSort = currentSort === 'name-asc' ? 'name-desc' : 'name-asc';
+                } else if (sortBy === 'id') {
+                    newSort = currentSort === 'id-asc' ? 'id-desc' : 'id-asc';
+                } else if (sortBy === 'class') {
+                    newSort = currentSort === 'class-asc' ? 'class-desc' : 'class-asc';
+                }
+
+                document.getElementById('sortSelect').value = newSort;
+                filterAndSortStudents();
+            });
+        });
+
+        // 分页按钮事件
+        document.getElementById('prevPage').addEventListener('click', () => {
+            // 实际项目中实现上一页逻辑
+            alert('上一页');
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            // 实际项目中实现下一页逻辑
+            alert('下一页');
+        });
+    }
+
+    // 初始化页面
+    function init() {
+        // 初始渲染学生表格
+        renderStudentTable(students);
+
+        // 初始化事件监听器
+        initEventListeners();
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', init);
+</script>
