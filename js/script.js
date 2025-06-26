@@ -122,6 +122,8 @@ window.addEventListener('message', function(e) {
             text = '学生列表';
         }else if (newSrc.includes('learningAnalysis.html')) {
             text = '学情分析';
+        }else if (newSrc.includes('errorRemarking.html')) {
+            text = '错判处理';
         }
         if(!ifFirst) {
             const navigationItems1 = document.createElement('li');

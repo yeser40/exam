@@ -52,7 +52,6 @@
 
 <!-- 主内容区 -->
 <main class="container mx-auto px-4 py-8">
-
     <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
             <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-neutral-700 mb-2">题目列表</h1>
@@ -69,73 +68,41 @@
     </div>
     <!-- 题目列表 -->
     <div class="space-y-4" id="questionsContainer">
-        <!-- 题目卡片1 - 已判阅 -->
+        <!-- 题目卡片4 - 部分判阅 -->
         <div class="question-card">
             <div class="flex justify-between items-start mb-4">
                 <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">1</div>
-                    <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
+                    <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center text-warning font-bold">4</div>
+                    <span class="text-sm font-medium text-warning"><i class="fa fa-hourglass-half mr-1"></i>部分判阅</span>
                 </div>
                 <div class="text-sm text-neutral-500">
-                    <i class="fa fa-clock-o mr-1"></i>5分钟前判阅
+                    <i class="fa fa-percent mr-1"></i> 已批改65%
                 </div>
             </div>
 
             <h3 class="text-base font-semibold text-neutral-700 mb-3">
-                请简述《论语》中"学而时习之"的内涵及其现代意义。
+                请以"责任"为主题，写一篇不少于800字的议论文。要求观点明确，论据充分，结构合理，语言流畅。
             </h3>
 
             <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div class="flex items-center text-sm text-neutral-500">
-                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 简答题</span>
-                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 中等</span>
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 作文</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 高</span>
                 </div>
 
                 <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                    <button class="px-3 py-1.5 bg-yellow-500 border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center relative">
                         <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                        <span class="num absolute -top-1 -right-1 w-5 h-5 bg-danger text-white rounded-full flex items-center justify-center text-xs">3</span>
                     </button>
                     <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
-                            question-id="1">
-                        <i class="fa fa-pencil mr-1"></i> 批改
+                            question-id="4">
+                        <i class="fa fa-pencil mr-1"></i> 继续批改
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 题目卡片2 - 已判阅 -->
-        <div class="question-card">
-            <div class="flex justify-between items-start mb-4">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">2</div>
-                    <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
-                </div>
-                <div class="text-sm text-neutral-500">
-                    <i class="fa fa-clock-o mr-1"></i>15分钟前判阅
-                </div>
-            </div>
-
-            <h3 class="text-base font-semibold text-neutral-700 mb-3">
-                李白《静夜思》中"床前明月光"的"床"字在学术界有多种解释，请列举两种并简述理由。
-            </h3>
-
-            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                <div class="flex items-center text-sm text-neutral-500">
-                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 简答题</span>
-                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 较难</span>
-                </div>
-
-                <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
-                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
-                    </button>
-                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
-                            question-id="2">
-                        <i class="fa fa-pencil mr-1"></i> 批改
-                    </button>
-                </div>
-            </div>
-        </div>
 
         <!-- 题目卡片3 - 未判阅 -->
         <div class="question-card">
@@ -163,46 +130,12 @@
                 </div>
 
                 <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                    <button disabled class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
                         <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
                     </button>
                     <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
                             question-id="3">
                         <i class="fa fa-pencil mr-1"></i> 批改
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 题目卡片4 - 部分判阅 -->
-        <div class="question-card">
-            <div class="flex justify-between items-start mb-4">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center text-warning font-bold">4</div>
-                    <span class="text-sm font-medium text-warning"><i class="fa fa-hourglass-half mr-1"></i>部分判阅</span>
-                </div>
-                <div class="text-sm text-neutral-500">
-                    <i class="fa fa-percent mr-1"></i> 已批改65%
-                </div>
-            </div>
-
-            <h3 class="text-base font-semibold text-neutral-700 mb-3">
-                请以"责任"为主题，写一篇不少于800字的议论文。要求观点明确，论据充分，结构合理，语言流畅。
-            </h3>
-
-            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                <div class="flex items-center text-sm text-neutral-500">
-                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 作文</span>
-                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 高</span>
-                </div>
-
-                <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
-                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
-                    </button>
-                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
-                            question-id="4">
-                        <i class="fa fa-pencil mr-1"></i> 继续批改
                     </button>
                 </div>
             </div>
@@ -240,7 +173,7 @@
                 </div>
 
                 <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                    <button disabled class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
                         <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
                     </button>
                     <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
@@ -285,11 +218,79 @@
                 </div>
 
                 <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                    <button disabled class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
                         <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
                     </button>
                     <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
                         question-id="6">
+                        <i class="fa fa-pencil mr-1"></i> 批改
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片1 - 已判阅 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">1</div>
+                    <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-clock-o mr-1"></i>5分钟前判阅
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                请简述《论语》中"学而时习之"的内涵及其现代意义。
+            </h3>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 简答题</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 中等</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button disabled class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                            question-id="1">
+                        <i class="fa fa-pencil mr-1"></i> 批改
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题目卡片2 - 已判阅 -->
+        <div class="question-card">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success font-bold">2</div>
+                    <span class="text-sm font-medium text-success"><i class="fa fa-check-circle mr-1"></i>已判阅</span>
+                </div>
+                <div class="text-sm text-neutral-500">
+                    <i class="fa fa-clock-o mr-1"></i>15分钟前判阅
+                </div>
+            </div>
+
+            <h3 class="text-base font-semibold text-neutral-700 mb-3">
+                李白《静夜思》中"床前明月光"的"床"字在学术界有多种解释，请列举两种并简述理由。
+            </h3>
+
+            <div class="border-t border-neutral-200 pt-4 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-center text-sm text-neutral-500">
+                    <span class="flex items-center mr-4"><i class="fa fa-file-text-o mr-1"></i> 简答题</span>
+                    <span class="flex items-center"><i class="fa fa-star-o mr-1"></i> 难度: 较难</span>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button disabled class="px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-neutral-600 hover:bg-neutral-50 transition-colors flex items-center">
+                        <i class="fa fa-exclamation-triangle mr-1"></i> 处理错判
+                    </button>
+                    <button class="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center"
+                            question-id="2">
                         <i class="fa fa-pencil mr-1"></i> 批改
                     </button>
                 </div>
@@ -348,7 +349,7 @@
                 // 模拟加载延迟
                 setTimeout(() => {
                     // 实际项目中这里应该跳转到错判处理页面
-                    window.parent.postMessage({ type: 'urlChange', url: "markingPaper/markingPaper.html" }, '*');
+                    window.parent.postMessage({ type: 'urlChange', url: "markingPaper/errorRemarking.html" }, '*');
                 }, 300);
 
             });
