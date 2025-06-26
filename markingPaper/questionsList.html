@@ -343,18 +343,14 @@
                 const questionCard = this.closest('.question-card');
                 const questionTitle = questionCard.querySelector('h3').textContent;
 
-                // 显示处理错判确认对话框
-                if (confirm(`确定要处理"${questionTitle.substring(0, 20)}..."的错判申请吗？`)) {
-                    // 显示处理中提示
-                    showNotification('正在加载错判申请...', 'info');
+                showNotification('正在加载错判申请...', 'info');
 
-                    // 模拟加载延迟
-                    setTimeout(() => {
-                        // 实际项目中这里应该跳转到错判处理页面
-                        // alert(`已跳转到"${questionTitle.substring(0, 20)}..."的错判处理页面`);
-                        window.parent.postMessage({ type: 'urlChange', url: "markingPaper/markingPaper.html" }, '*');
-                    }, 300);
-                }
+                // 模拟加载延迟
+                setTimeout(() => {
+                    // 实际项目中这里应该跳转到错判处理页面
+                    window.parent.postMessage({ type: 'urlChange', url: "markingPaper/markingPaper.html" }, '*');
+                }, 300);
+
             });
         });
 

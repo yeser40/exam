@@ -44,14 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const examId = this.getAttribute('data-exam-id');
             const examName = this.getAttribute('data-exam-name');
 
-            // 显示确认对话框
-            if (confirm(`确定要进入"${examName}"的判卷页面吗？`)) {
-                // 记录操作日志
-                // console.log(`用户开始判卷: ID=${examId}, 名称=${examName}`);
+            simulatePageLoading(examId, examName);
 
-                // 模拟页面跳转（实际项目中替换为真实URL）
-                simulatePageLoading(examId, examName);
-            }
         });
     });
 

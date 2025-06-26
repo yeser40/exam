@@ -46,23 +46,6 @@ function adjustSidebar() {
 window.addEventListener('load', adjustSidebar);
 window.addEventListener('resize', adjustSidebar);
 
-// Arama butonunu toggle etme
-// const searchButton = document.querySelector('#content nav form .form-input button');
-// const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
-// const searchForm = document.querySelector('#content nav form');
-//
-// searchButton.addEventListener('click', function (e) {
-//     if (window.innerWidth < 768) {
-//         e.preventDefault();
-//         searchForm.classList.toggle('show');
-//         if (searchForm.classList.contains('show')) {
-//             searchButtonIcon.classList.replace('bx-search', 'bx-x');
-//         } else {
-//             searchButtonIcon.classList.replace('bx-x', 'bx-search');
-//         }
-//     }
-// })
-
 // Notification Menu Toggle
 document.querySelector('.notification').addEventListener('click', function () {
     document.querySelector('.notification-menu').classList.toggle('show');
@@ -112,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 const iframe = document.getElementById('myIframe');
-let newSrc = iframe.src;
 const breadcrumb = document.getElementById('breadcrumb');
 
 window.addEventListener('message', function(e) {

@@ -635,10 +635,6 @@
                 return;
             }
 
-            if (!confirm('确定要撤销重判申请吗？此操作不可恢复。')) {
-                return;
-            }
-
             // 显示撤销中的状态
             submitRejudge.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>撤销中...';
             submitRejudge.disabled = true;
@@ -648,7 +644,6 @@
                 rejudgeData.hasApplied = false;
                 rejudgeData.reason = '';
 
-                alert('重判申请已撤销！');
                 rejudgeStatus.innerHTML = rejudgeHtml;
                 updateRejudgeUI();
             }, 1000);
